@@ -8,17 +8,24 @@ CleanJava - Readme
 		the environment variable ANT_OPTS="-Xmx256M" on the command line or 
 		adding it to ~/.ant/ant.conf
 
-	- Update latest version of CleanJavaCompiler and JastAddJ modules
-		- Path: /home/cvsroot/research
-		- Module: CleanJava/compiler/
-
-- Building the compiler:
-	- Go to CleanJavaCompiler directory and type "ant" on the command line
+- Building the checker:
+	- Go to CJC module directory and type "ant" on the command line
 	- To set the project to its original state type "ant clean"
 
 - Working with the compiler:
-	- Run checker by typing: java cleanJavaTools/JavaChecker <File directory>/[Filename].java 
+	- Run checker by typing: java cleanJavaTools/CleanJavaChecker <File directory>/[Filename].java 
 		on the command line
-	- Run pretty printer by typing: java cleanJavaTools/JavaPrettyPrinter <File directory>/[Filename].java
-	- View AST by typing: java cleanJavaTools/JavaDumpTree <File directory>/[Filename].java 
+	- Run pretty printer by typing: java cleanJavaTools/CJCPrettyPrinter <File directory>/[Filename].java
+	- View AST by typing: java cleanJavaTools/CJCDumpTree <File directory>/[Filename].java 
 		on the command line
+
+LICENSING
+
+The CleanJava Checker framework code is covered by the BSD license.
+
+The included tools are covered by their individual licenses (see licenses folder):
+JastAddJ (BSD licencse)
+JastAdd (BSD license)
+jflex (lexer generator) (GPL license)
+beaver (parser generator) (BSD license)
+junit (testing tool) (Common Public License)
