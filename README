@@ -1,0 +1,24 @@
+CleanJava - Readme
+
+- Requirements:
+	- Latest version of Apache Ant
+	- Latest version of Java SDK
+	- Set the environment variable to Apache and Java binary directories
+	- Make sure that the ant heap size is at least 256M. This can be done by setting 
+		the environment variable ANT_OPTS="-Xmx256M" on the command line or 
+		adding it to ~/.ant/ant.conf
+
+	- Update latest version of CleanJavaCompiler and JastAddJ modules
+		- Path: /home/cvsroot/research
+		- Module: CleanJava/compiler/
+
+- Building the compiler:
+	- Go to CleanJavaCompiler directory and type "ant" on the command line
+	- To set the project to its original state type "ant clean"
+
+- Working with the compiler:
+	- Run checker by typing: java cleanJavaTools/JavaChecker <File directory>/[Filename].java 
+		on the command line
+	- Run pretty printer by typing: java cleanJavaTools/JavaPrettyPrinter <File directory>/[Filename].java
+	- View AST by typing: java cleanJavaTools/JavaDumpTree <File directory>/[Filename].java 
+		on the command line
