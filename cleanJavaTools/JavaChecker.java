@@ -47,6 +47,6 @@ public class JavaChecker extends Frontend {
 		return resources.getString(key);
 	}
 
-	protected String name() { return getString("jastaddj.CleanJavaChecker"); }
+	protected String name() { return getString("jastaddj.JavaChecker"); }
 	protected String version() { return getString("jastaddj.Version"); }
 }

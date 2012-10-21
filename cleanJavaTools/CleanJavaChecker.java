@@ -1,13 +1,14 @@
-/*
- * The JastAdd Extensible Java Compiler (http://jastadd.org) is covered
- * by the modified BSD License. You should have received a copy of the
- * modified BSD license with this compiler.
+/*******************************************************************************
+ * Copyright (c) 2012 Cesar Yeep.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the BSD 3-Clause License
+ * ("New BSD" or "BSD Simplified") which accompanies this distribution,
+ * and is available at
+ * http://opensource.org/licenses/BSD-3-Clause
  * 
- * Copyright (c) 2005-2008, Torbjorn Ekman
- * 
- * modified by Cesar Yeep, 2012
- * All rights reserved.
- */
+ * Contributors:
+ *     Cesar Yeep - initial API and implementation
+ ******************************************************************************/
 package cleanJavaTools;
 
 import AST.*;
@@ -58,4 +59,22 @@ public class CleanJavaChecker extends Frontend {
 			}
 		);
   }
+	
+	
+	protected ResourceBundle resources = null;
+	protected String resourcename = "JastAddJ";
+	protected String getString(String key) {
+		if (resources == null) {
+			try {
+				resources = ResourceBundle.getBundle(resourcename);
+			} catch (MissingResourceException e) {
+				throw new Error("Could not open the resource " +
+						resourcename);
+			}
+		}
+		return resources.getString(key);
+	}
+
+	protected String name() { return getString("cjc.CleanJavaChecker"); }
+	protected String version() { return getString("jastaddj.Version"); }
 }
