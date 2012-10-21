@@ -1,0 +1,23 @@
+/*******************************************************************************
+ * Copyright (c) 2012 Cesar Yeep.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the BSD 3-Clause License
+ * ("New BSD" or "BSD Simplified") which accompanies this distribution,
+ * and is available at
+ * http://opensource.org/licenses/BSD-3-Clause
+ * 
+ * Contributors:
+ *     Cesar Yeep - initial API and implementation
+ ******************************************************************************/
+aspect CleanJavaErrorCheck{	
+	public String Problem.toSimpleString() {
+      String s = "";
+      if(this.kind == Kind.LEXICAL)
+        s = "Lexical Error: ";
+      else if(this.kind == Kind.SYNTACTIC)
+        s = "Syntactic Error: ";
+      else if(this.kind == Kind.SEMANTIC)
+        s = "Semantic Error: ";
+      return s + message;
+	}
+}

@@ -1,0 +1,61 @@
+/*******************************************************************************
+ * Copyright (c) 2012 Cesar Yeep.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the BSD 3-Clause License
+ * ("New BSD" or "BSD Simplified") which accompanies this distribution,
+ * and is available at
+ * http://opensource.org/licenses/BSD-3-Clause
+ * 
+ * Contributors:
+ *     Cesar Yeep - initial API and implementation
+ ******************************************************************************/
+aspect CleanJavaMemberSpecs {
+
+	// pretty printing
+	
+	public void CJStaticInitializer.toString(StringBuffer s) {
+		singleLine(s);
+		s.append("/* @[ ");
+		getSpecs().toString(s);
+		s.append(" ] */");
+		super.toString(s);
+	}
+
+	public void CJInstanceInitializer.toString(StringBuffer s) {
+		singleLine(s);
+		s.append("/* @[ ");
+		getSpecs().toString(s);
+		s.append(" ] */");
+		super.toString(s);
+	}
+
+	public void CJConstructorDecl.toString(StringBuffer s) {
+		singleLine(s);
+		s.append("/* @[ ");
+		getSpecs().toString(s);
+		s.append(" ] */");
+		super.toString(s);
+	}
+	
+	public void CJMethodDecl.toString(StringBuffer s){
+		singleLine(s);
+		s.append("/* @[ ");
+		getSpecs().toString(s);
+		s.append(" ] */");
+		super.toString(s);
+	}
+	
+	public void CJBlock.toString(StringBuffer s){
+		singleLine(s);
+		s.append("/* @[ ");
+		getSpecs().toString(s);
+		s.append(" ] */");
+		super.toString(s);
+	}
+  
+	//TODO: put this in a CJ general aspect
+	public void ASTNode.singleLine(StringBuffer s) {
+		s.append("\n"+indent());
+	}
+	
+}

@@ -1,0 +1,78 @@
+/*******************************************************************************
+ * Copyright (c) 2012 Cesar Yeep.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the BSD 3-Clause License
+ * ("New BSD" or "BSD Simplified") which accompanies this distribution,
+ * and is available at
+ * http://opensource.org/licenses/BSD-3-Clause
+ * 
+ * Contributors:
+ *     Cesar Yeep - initial API and implementation
+ ******************************************************************************/
+/*
+ * CLEANJAVA AST grammar
+ */
+
+//TODO: work in a list of expressions in Intended fuction (extended intended function)
+//TODO: work in a list of intended functions (function composition i.e. f1;f2)
+
+abstract CJStmt;
+
+//Class body declaration
+
+CJStaticInitializer:StaticInitializer ::= Specs:AbstractConcurrentAssignment;
+CJInstanceInitializer:InstanceInitializer ::= Specs:AbstractConcurrentAssignment;
+
+//Class member declaration
+
+CJMethodDecl:MethodDecl ::= Specs:AbstractConcurrentAssignment;
+CJConstructorDecl:ConstructorDecl ::= Specs:AbstractConcurrentAssignment;
+
+//Statement annotation
+
+CJBlock:Block ::= Specs:AbstractConcurrentAssignment;
+
+
+//CleanJava statements
+
+abstract AbstractConcurrentAssignment:CJStmt;
+
+abstract AbstractSimpleConcurrentAssignment:AbstractConcurrentAssignment;
+
+SimpleConcurrentAssignment:AbstractSimpleConcurrentAssignment ::= Dest:Expr* Source:Expr*;
+
+Identity:AbstractSimpleConcurrentAssignment ;
+
+//CondConcurrentAssignment:AbstractConcurrentAssignment ::= Condition:Expr Then:AbstractSimpleConcurrentAssignment [Else:AbstractConcurrentAssignment];
+
+CondConcurrentAssignment:AbstractConcurrentAssignment ::= Pairs:ExprAndAbstractSimpleConcurrentAssignment* [Else:AbstractSimpleConcurrentAssignment];
+
+ExprAndAbstractSimpleConcurrentAssignment ::= Condition:Expr Then:AbstractSimpleConcurrentAssignment;
+
+//CleanJava expressions
+
+abstract CJExpr:Expr;
+
+//Design extends from CJExpr
+InformalDescription:Expr ::= <Description:String>;
+
+
+//Literals
+
+abstract CJLiteral:Literal;
+
+//Design has a CJLiteral
+AnythingLiteral:Literal ;
+
+//ResultLiteral : Literal ;
+
+
+//Iterator operators
+//JVariableDecl:VariableDecl;
+
+IterateOperator:MethodAccess ::= Element:CJVariableDecl*;
+
+CJVariableDecl:VariableDecl ::= TypeAccess:Access;
+
+
+

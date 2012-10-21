@@ -1,0 +1,156 @@
+/*******************************************************************************
+ * Copyright (c) 2012 Cesar Yeep.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the BSD 3-Clause License
+ * ("New BSD" or "BSD Simplified") which accompanies this distribution,
+ * and is available at
+ * http://opensource.org/licenses/BSD-3-Clause
+ * 
+ * Contributors:
+ *     Cesar Yeep - initial API and implementation
+ ******************************************************************************/
+aspect CleanJavaStatement {
+
+  // helper attribute to find the containing CJMethodDecl
+	syn BodyDecl ASTNode.containingCJMethodDecl() = getParent() != null ? getParent().containingCJMethodDecl() : null;
+	syn BodyDecl CJMethodDecl.containingCJMethodDecl() = this;
+	syn BodyDecl CJConstructorDecl.containingCJMethodDecl() = this;
+	
+	
+	eq CJMethodDecl.getSpecs().lookupVariable(String name) {
+		SimpleSet set = parameterDeclaration(name);
+		if (!set.isEmpty()) return set;
+		// Delegate to other declarations in scope
+		return lookupVariable(name);
+	}
+	
+
+  // Unreachable Statements (see UnreachableStatements.jrag)
+
+	eq CJStaticInitializer.getSpecs().reachable() = true;
+	eq CJInstanceInitializer.getSpecs().reachable()  = true; 
+	eq CJMethodDecl.getSpecs().reachable()        = true;
+	eq CJConstructorDecl.getSpecs().reachable()   = true;
+
+
+  // Pretty printer
+	
+	syn String SimpleConcurrentAssignment.printOp() = " := ";
+		
+	public void SimpleConcurrentAssignment.toString(StringBuffer s) {
+		if(getNumDest() > 0) {
+			for(int i = 0; i < getNumDest(); i++) {
+				if(i != 0)
+					s.append(", ");
+				getDest(i).toString(s);
+			}
+		}
+		s.append(printOp());
+		if(getNumSource() > 0) {
+			for(int i = 0; i < getNumSource(); i++) {
+				if(i != 0)
+					s.append(", ");
+				getSource(i).toString(s);
+			}
+		}
+	}
+	
+	
+	public void CondConcurrentAssignment.toString(StringBuffer s) {
+		if(getNumPairs() > 0) {
+			for(int i = 0; i < getNumPairs(); i++) {
+				if(i != 0)
+				{
+					s.append(indent());
+					s.append("| ");
+				}
+				getPairs(i).toString(s);
+			}
+		}
+		
+	}
+	
+	public void ExprAndAbstractSimpleConcurrentAssignment.toString(StringBuffer s) {
+		getCondition().toString(s);
+		s.append(" -> ");
+		getThen().toString(s);
+	}
+	
+	public void Identity.toString(StringBuffer s){
+		s.append(" I ");
+	}
+	
+		
+  // Type check
+		
+	public void SimpleConcurrentAssignment.typeCheck() {
+		//Check if equation is balanced
+		if(getNumDest() != getNumSource())
+		{
+			error("concurrent assignment is unbalanced");
+		}
+		else{
+			//java.util.List<String> variablesList = new ArrayList<String>();
+			for(int i = 0; i < getNumDest(); i++) {
+				if(!getDest(i).isVariable())
+					error(getDest(i)+" is not a variable");
+				else if(!getSource(i).type().assignConversionTo(getDest(i).type(), getSource(i)) && !getSource(i).type().isUnknown())
+					error("can not assign " + getDest(i) + " of type " + getDest(i).type().typeName() +
+						" a value of type " + getSource(i).type().typeName());
+				//variablesList.add(getDest(i).varDecl().name());
+				//System.out.println(getDest(i).varDecl().name());
+			}
+
+			//Check if there are any duplicates in the left side of the intended function
+			
+			//Set<String> set = new HashSet<String>(variablesList);
+			//if(set.size() < getNumDest())
+			//	error("there are duplicates in the left-hand side of the equation: " + getVariableDuplicates());
+			
+		}
+	}
+	
+	/*
+	public void SimpleConcurrentAssignment.typeCheck(){
+	    if(!getDest().isVariable())
+			error("left hand side is not a variable");
+		else {
+			TypeDecl source = sourceType();
+			TypeDecl dest = getDest().type();
+			if(getSource().type().isPrimitive() && getDest().type().isPrimitive())
+				return;
+			error("can not assign " + getDest() + " of type " + getDest().type().typeName() +
+				" a value of type " + sourceType().typeName());
+		}
+	}*/
+	
+	//syn TypeDecl SimpleConcurrentAssignment.sourceType() = getSource().type();
+	
+	/*
+	public String SimpleConcurrentAssignExpr.getVariableDuplicates()
+	{
+		ArrayList<String> duplicates = new ArrayList<String>();
+		ArrayList<String> temp = new ArrayList<String>();
+		String duplicateString = "";
+		for(Expr expression: getDests()) {
+				if(expression.isVariable())
+				{
+					String varName = expression.varDecl().name();
+					if(temp.contains(varName))
+					{
+						if(!duplicates.contains(varName))
+						{
+							duplicates.add(varName);
+							duplicateString += varName + " ";
+						}
+					}
+					else
+						temp.add(varName);
+				}
+		}
+		return duplicateString.trim();
+	}
+	*/
+		
+	
+}

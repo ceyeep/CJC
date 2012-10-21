@@ -1,0 +1,5 @@
+/*
+Expr expression =
+	ANY_ITERATOR LPAREN type.t variable_declarator.d RPAREN {: return new AnyIterator(t,d); :}
+  ;
+*/

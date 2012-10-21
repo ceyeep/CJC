@@ -1,0 +1,55 @@
+AbstractConcurrentAssignment abstract_concurrent_assignment =
+	START abstract_simple_concurrent_assignment.e RBRACK	{: return e; :}
+  |	START conditional_concurrent_assignment.e RBRACK	{: return e; :}
+  ;
+  
+AbstractSimpleConcurrentAssignment abstract_simple_concurrent_assignment = 
+	simple_concurrent_assignment.a		{: return a; :}
+	identity.i  					 	{: return i; :}
+  ;
+  
+  
+SimpleConcurrentAssignment simple_concurrent_assignment =
+	postfix_expression_list.dest CLEANEQ assignment_expression_list.source {: return new SimpleConcurrentAssignment(dest,source); :}
+  ;
+
+List postfix_expression_list =
+    postfix_expression.e                                 {: return new List().add(e); :}
+  |	postfix_expression_list.l COMMA postfix_expression.e {: return l.add(e); :}
+  ;
+
+List assignment_expression_list =
+    assignment_expression.e                                   {: return new List().add(e); :}
+  |	assignment_expression_list.l COMMA assignment_expression.e {: return l.add(e); :}
+  ;
+
+CondConcurrentAssignment conditional_concurrent_assignment =
+	conditional_assignment_list.l {: return new CondConcurrentAssignment(l,  new Opt()); :}
+  |	conditional_assignment_list.l CLEANELSE  abstract_simple_concurrent_assignment.els {: return new CondConcurrentAssignment(l, new Opt(els)); :} 
+  ;
+
+List conditional_assignment_list =
+    expression_and_abstract_simple_concurrent_assignment.e     {: return new List().add(e); :}
+  |	conditional_assignment_list.l CLEANELSE expression_and_abstract_simple_concurrent_assignment.e {: return l.add(e); :}
+  ;  
+  
+ExprAndAbstractSimpleConcurrentAssignment  expression_and_abstract_simple_concurrent_assignment =
+	expression.e THEN abstract_simple_concurrent_assignment.s  {: return new ExprAndAbstractSimpleConcurrentAssignment(e, s); :}
+  ;
+  
+  
+Identity identity = 
+	IDENTITY_LITERAL        {: return new Identity(); :}
+  ;
+
+  
+  
+/* List of expressions in intended function
+
+List concurrent_assignment_expr_list =
+	concurrent_assignment_expr.e				{: return new List().add(e); :}
+  |	concurrent_assignment_expr_list.l ELLIPSIS concurrent_assignment_expr.e {: return l.add(e); :}
+  ;
+ 
+
+*/
