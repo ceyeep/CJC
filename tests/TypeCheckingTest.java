@@ -42,7 +42,7 @@ public class TypeCheckingTest extends TestCase {
 	public void testTypeChecking03() {
 		String setUp = "int x;";
 		String testCase = " //@ [ y := 3]";
-		assertEquals("Semantic Error: no field named y",runChecker(setUp,testCase));
+		assertEquals("Semantic Error: no field named y is accessible",runChecker(setUp,testCase));
 		
 	}
 	

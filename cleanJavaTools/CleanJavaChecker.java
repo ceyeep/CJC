@@ -45,7 +45,7 @@ public class CleanJavaChecker extends Frontend {
 		}
 		System.out.println(errorString);
     }
-
+	
 	public void checker(String[] args) {
 		process(
 			args,

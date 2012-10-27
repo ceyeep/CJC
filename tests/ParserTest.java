@@ -93,7 +93,7 @@ public class ParserTest extends TestCase {
 	
 	// Test missing value in the right side of the assignment expression
 	public void testParserFail01() {
-		assertParseError("//@[x := asadfasdfa");
+		assertParseError("//@[x := ]");
 	}
 	
 	// Test incorrect assingment symbol
@@ -149,6 +149,7 @@ public class ParserTest extends TestCase {
 			parse(createStub(intendedFunction));
 		} 
 		catch(Parser.Exception e) {
+			System.out.println("Error catched");
 			return;
 		}
 		catch (Throwable e) {
