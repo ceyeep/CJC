@@ -33,7 +33,6 @@
   "//" {InputCharacter}* {LineTerminator}?     { }
 }
 
-//JAVA GRAMMAR + CLEANJAVA GRAMMAR
 
 <CLEANSINGLE,CLEANMULTILINE> {
   "{"                            { return sym(Terminals.LBRACE); }
@@ -45,8 +44,12 @@
   "["   { enterPredicate(); return sym(Terminals.START); }
 }
 
+//JAVA GRAMMAR + CLEANJAVA GRAMMAR
+
 // The following reserved words are copied from the Java lexer,
 <CLEANSINGLE,CLEANMULTILINE,CLEANSINGLEEXPRESSION,CLEANMULTILINEEXPRESSION> {
+  {WhiteSpace} { }
+
   "assert"                       { return sym(Terminals.ASSERT); }
   "abstract"                     { return sym(Terminals.ABSTRACT); }
   "boolean"                      { return sym(Terminals.BOOLEAN); }
@@ -98,30 +101,13 @@
   "while"                        { return sym(Terminals.WHILE); }
   
   "enum" { return sym(Terminals.ENUM); }
-
-  {WhiteSpace} { }
   
-
 }
 
 // The following expression tokens are copied from the Java lexer,
 <CLEANSINGLEEXPRESSION,CLEANMULTILINEEXPRESSION> {
   // 3.10.1 Integer Literals
-  {DecimalNumeral}               { return sym(Terminals.INTEGER_LITERAL); }
-  {DecimalNumeral} [lL]          { return sym(Terminals.LONG_LITERAL, str().substring(0,len()-1)); }
-
-  {HexNumeral}                   { return sym(Terminals.INTEGER_LITERAL); }
-  {HexNumeral} [lL]              { return sym(Terminals.LONG_LITERAL, str().substring(0, len()-1)); }
-
-  {OctalNumeral}                 { return sym(Terminals.INTEGER_LITERAL); }
-  {OctalNumeral} [lL]            { return sym(Terminals.LONG_LITERAL, str().substring(0, len()-1)); }
-
-  // 3.10.2 Floating-Point Literals
-  {FloatingPointLiteral} [fF]    { return sym(Terminals.FLOATING_POINT_LITERAL, str().substring(0,len()-1)); }
-  {FloatingPointLiteral} [dD]    { return sym(Terminals.DOUBLE_LITERAL, str().substring(0,len()-1)); }
-  {FloatingPointLiteral}         { return sym(Terminals.DOUBLE_LITERAL); }
-  [0-9]+ {ExponentPart}? [fF]    { return sym(Terminals.FLOATING_POINT_LITERAL, str().substring(0,len()-1)); }
-  [0-9]+ {ExponentPart}? [dD]    { return sym(Terminals.DOUBLE_LITERAL, str().substring(0,len()-1)); }
+  {NumericLiteral}               { return sym(Terminals.NUMERIC_LITERAL); }
   
   // 3.10.3 Boolean Literals
   "true"                         { return sym(Terminals.BOOLEAN_LITERAL); }
@@ -163,10 +149,6 @@
   //"\\any" 						 { return sym(Terminals.ANY_ITERATOR); }
 
 
-
-  {HexadecimalFloatingPointLiteral} [fF]    { return sym(Terminals.FLOATING_POINT_LITERAL, str().substring(0,len()-1)); }
-  {HexadecimalFloatingPointLiteral} [dD]    { return sym(Terminals.DOUBLE_LITERAL, str().substring(0,len()-1)); }
-  {HexadecimalFloatingPointLiteral}         { return sym(Terminals.DOUBLE_LITERAL); }
  
   // 3.11 Separators
   "("                            { lParenInExpr();return sym(Terminals.LPAREN); }
@@ -219,10 +201,11 @@
   "=>"							{ return sym(Terminals.ITERATOR); }
   "\\cj"							{ return sym(Terminals.CJVAR); }
 
-  
   // 3.8 Identifiers located at end of current state due to rule priority disambiguation
   ([:jletter:]|[\ud800-\udfff])([:jletterdigit:]|[\ud800-\udfff])* { return sym(Terminals.IDENTIFIER); }
-}
+
+  }
+
 
 // The following are copied from the Java lexer,
 <CLEANEXPRESSIONSTRING> {

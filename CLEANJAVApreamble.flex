@@ -40,6 +40,9 @@ import java.util.Stack;
   int sub_column;
   int strlit_start_line, strlit_start_column;
   
+  //CleanJava string literal markers
+  int cj_strlit_start_line, cj_strlit_start_column;
+  
   /** Track states for CLEANJAVA, especially in predicates */
   Stack statestack = new Stack();
   

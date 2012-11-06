@@ -76,5 +76,6 @@ public class CleanJavaChecker extends Frontend {
 	}
 
 	protected String name() { return getString("cjc.CleanJavaChecker"); }
-	protected String version() { return getString("jastaddj.Version"); }
+	protected String version() { return getString("cjc.Version"); }
+	protected String url() { return getString("cjc.URL"); }
 }

@@ -2,4 +2,6 @@ jastaddj.Version=@VERSION@
 jastaddj.PrettyPrinter=Java Pretty Printer
 jastaddj.JavaChecker=Java Checker
 jastaddj.DumpTree=Java AST Dumper
+cjc.Version=@VERSION@
 cjc.CleanJavaChecker=CleanJava Checker
+cjc.URL=https://github.com/ceyeep/CJC.git

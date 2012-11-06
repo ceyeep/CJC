@@ -1,10 +1,13 @@
-<project name="CleanJava Checker" default="build">
+<project name="CJC" default="build">
 
 	<!-- location of Java1.4Frontend -->
 	<property name="Java1.4Frontend" value="../JastAddJ/Java1.4Frontend"/>
 	
 	<!-- location of Java1.5Frontend -->
 	<property name="Java1.5Frontend" value="../JastAddJ/Java1.5Frontend"/>
+	
+	<!-- location of Java7Frontend -->
+	<property name="Java7Frontend" value="../JastAddJ/Java7Frontend"/>
 
 	<!-- the directory where generated files will be stored -->
 	<property name="package" value="AST"/>
@@ -36,7 +39,8 @@
 		</copy>
 	</target>
 
-	<target name="build" depends="gen,prepare" description="Compile CleanJava Checker">
+	<target name="build" depends="gen,prepare" 
+		description="Compile CleanJava Checker">
 		<javac debug="true" nowarn="true" srcdir="."
 			includeantruntime="true">
 			<include name="**/*.java"/>
@@ -87,7 +91,7 @@
 		<jastadd package="${package}" rewrite="true"
 			beaver="true" novisitcheck="true" noCacheCycle="true"
 			outdir="${basedir}" debug="false" refineLegacy="false">
-			<fileset dir=".">
+			<fileset dir="${Java7Frontend}">
 				<include name="ConstantExpression.jrag"/>
 				<include name="Variable.jadd"/>
 			</fileset>
@@ -95,13 +99,20 @@
 				<include name="**/*.ast"/>
 				<include name="**/*.jrag"/>
 				<include name="**/*.jadd"/>
-
+				<exclude name="Literals.ast"/>
+				<exclude name="CatchClause.ast"/>
+				<exclude name="Variable.jadd"/>
 				<exclude name="BytecodeAttributes.jrag"/>
 				<exclude name="BytecodeDescriptor.jrag"/>
 				<exclude name="BytecodeReader.jrag"/>
-
+				<exclude name="ConstantExpression.jrag"/>
 			</fileset>
 			<fileset dir="${Java1.5Frontend}">
+				<include name="**/*.ast"/>
+				<include name="**/*.jrag"/>
+				<include name="**/*.jadd"/>
+			</fileset>
+			<fileset dir="${Java7Frontend}">
 				<include name="**/*.ast"/>
 				<include name="**/*.jrag"/>
 				<include name="**/*.jadd"/>
@@ -121,31 +132,26 @@
 		<concat destfile="scanner/JavaScanner.flex" binary="true" force="false">
 			<filelist dir=".">
 				<file name="CLEANJAVApreamble.flex" />
-				<file name="macros1.4CLEANJAVA.flex" />
+				<file name="macros7CLEANJAVA.flex" />
 			</filelist>
-			<filelist dir="${Java1.5Frontend}">
-				<file name="java15macros.flex"/>
-			</filelist>
+
 			<filelist dir="${Java1.4Frontend}/scanner">
 				<file name="rules_preamble.flex" />
 				<file name="WhiteSpace.flex" />
-			</filelist>
-			<filelist dir=".">
-				<file name="CLEANJAVAscanner.flex" />
-			</filelist>
-			<filelist dir="${Java1.4Frontend}/scanner">
 				<file name="Comments.flex" />
 				<file name="Keywords.flex" />
 			</filelist>
 			<filelist dir="${Java1.5Frontend}">
 				<file name="java15keywords.flex"/>
 			</filelist>
-			<filelist dir="${Java1.4Frontend}/scanner">
+			<filelist dir="${Java7Frontend}">
 				<file name="Literals.flex"/>
 			</filelist>
-			<filelist dir="${Java1.5Frontend}">
-				<file name="java15literals.flex"/>
+			
+			<filelist dir=".">
+				<file name="CLEANJAVAscanner.flex" />
 			</filelist>
+			
 			<filelist dir="${Java1.4Frontend}/scanner">
 				<file name="Separators.flex"/>
 				<file name="Operators.flex"/>
@@ -173,6 +179,9 @@
 				<file name="parser/errorrecovery.parser"/>
 			</filelist>
 			<fileset dir="${Java1.5Frontend}">
+				<include name="*.parser"/>
+			</fileset>
+			<fileset dir="${Java7Frontend}">
 				<include name="*.parser"/>
 			</fileset>
 			<fileset dir=".">
@@ -216,8 +225,32 @@
 		</manifest>
 	  </jar>
 	</target>
-
 	
+	<!-- create a source distribution -->
+	<target name="source" depends="build" description="Build a source distribution">
+		<jar destfile="cjc-src.jar">
+			<fileset dir="..">
+				<!-- include frontend source files -->
+				<include name="CJC/*.java"/>
+				<include name="CJC/**/*.ast"/>
+				<include name="CJC/**/*.jrag"/>
+				<include name="CJC/**/*.jadd"/>
+				<!-- include parser and scanner -->
+				<include name="CJC/**/*.parser"/>
+				<include name="CJC/*.flex"/>
+				<!-- include buildfile used to build the frontend -->
+				<include name="CJC/build.xml"/>
+				<!-- include readme and licence -->
+				<include name="CJC/README"/>
+				<include name="CJC/LICENSE"/>
+				<include name="CJC/licences/*.*"/>
+			</fileset>
+			<manifest>
+			</manifest>
+		</jar>
+	</target>
+
+	<!-- test CleanJava checker module -->
 	<target name="test" depends="build">
 		<!-- Run all tests in dir by using the TestAll java program -->
 		<java 
@@ -228,7 +261,7 @@
 		/>
 	</target>
 	
-  
+	<!-- test CleanJava checker parser -->
   	<target name="test-parser" depends="build">
 		<junit>
 			<classpath>
@@ -247,6 +280,7 @@
 		</junit>
 	</target>
 	
+	<!-- test CleanJava checker static type checking -->
 	<target name="test-typechecking" depends="build">
 		<junit>
 			<classpath>
