@@ -16,7 +16,7 @@ CleanJava Checker (CJC) Source Distribution - Readme File
 	- Go to CJC module directory and type "ant" on the command line
 	- To set the project to its original state type "ant clean"
 
-- Working with the compiler:
+- Working with CJC:
 	- Run the checker by typing "java cleanJavaTools/CleanJavaChecker <File directory>/<Filename>.java"
 		in a command prompt, or using the cjc.bat batch file in a Windows command prompt
 		"cjc <File directory>/<Filename>.java"
@@ -37,7 +37,6 @@ CleanJava Checker (CJC) Source Distribution - Readme File
 		(generated in "doc" directory)
 		
 -  CJC supports the following CleanJava language features 
-
 	- CleanJava annotations
 	- Intended functions
 	- Java expressions

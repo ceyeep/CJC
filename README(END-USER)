@@ -1,0 +1,33 @@
+CleanJava Checker (CJC) - End-User Readme File
+
+- CJC requirements:
+	- Java SDK 7.x +
+
+- Working with CJC:
+	- Run the checker by typing "java -jar CleanJavaChecker.jar <File directory>/<Filename>.java"
+		in a command prompt, or using the cjc.bat batch file in a Windows command prompt
+		"cjc <File directory>/<Filename>.java"
+	- Type "java -jar CleanJavaChecker.jar -help" or "cjc -help"
+		to view all available command line options
+	
+		
+-  CJC supports the following CleanJava language features 
+	- CleanJava annotations
+	- Intended functions
+	- Java expressions
+	- CleanJava operators and expressions
+	- Iterate operators
+	
+	Visit CJC wiki at https://github.com/ceyeep/CJC/wiki to find a complete description 
+	of the different language features supported by CJC
+	
+- LICENSING
+
+	The CleanJava Checker framework code is covered by the BSD license.
+	
+	The included tools are covered by their individual licenses (see licenses folder):
+	JastAddJ (BSD licencse)
+	JastAdd (BSD license)
+	jflex (lexer generator) (GPL license)
+	beaver (parser generator) (BSD license)
+	junit (testing tool) (Common Public License)
