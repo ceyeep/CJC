@@ -9,7 +9,7 @@ CleanJava Checker (CJC) Source Distribution - Readme File
 	- Create the following directory structure:
 	
 		CleanJavaChecker
-			/   \
+		    /       \
 		JastAddJ    CJC
 
 - Building the checker:
