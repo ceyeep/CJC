@@ -38,7 +38,7 @@ CJBlock:Block ::= Specs:AbstractConcurrentAssignment;
 abstract AbstractConcurrentAssignment:CJStmt;
 
 abstract AbstractSimpleConcurrentAssignment:AbstractConcurrentAssignment;
-
+//Should be 1..n
 SimpleConcurrentAssignment:AbstractSimpleConcurrentAssignment ::= Dest:Expr* Source:Expr*;
 
 Identity:AbstractSimpleConcurrentAssignment ;

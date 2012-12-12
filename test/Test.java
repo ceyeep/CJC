@@ -23,12 +23,12 @@ public class Test {
 		x = 3;
 	}
 
-	//@[x := 3
+	//@[x := 3]
 	{
 		x = 5;
 	}
 	
-	/*[zero := \anything + 3]
+	/*@[zero := \anything + 3]
 	*/
 	static
 	{

@@ -149,7 +149,6 @@ public class ParserTest extends TestCase {
 			parse(createStub(intendedFunction));
 		} 
 		catch(Parser.Exception e) {
-			System.out.println("Error catched");
 			return;
 		}
 		catch (Throwable e) {

@@ -24,27 +24,31 @@ public class CleanJavaChecker extends Frontend {
 		checker.getErrors();
 	}
 	
+	/** Main checker constructor. */
 	public CleanJavaChecker(String[] args)
 	{
 		checker(args);
 	}
 	
+	/** Get error string used for testing purposes. */
 	public String getErrors()
 	{
 		return errorString;
 	}
 	
+	/** Process compiler errors. */
 	protected void processErrors(Collection errors, CompilationUnit unit) {
-		//System.out.println("Errors:");
+		System.out.println("Errors:");
 		for(Iterator<Problem> iter2 = errors.iterator(); iter2.hasNext(); ) {
-			String error = iter2.next().toSimpleString();
-			errorString += error;
+			Problem problem = iter2.next();
+			System.err.println(problem.toString());
+			errorString += problem.toSimpleString();
 			if(iter2.hasNext())
 				errorString += "\n";
-			//System.out.println(error);
 		}
-		System.out.println(errorString);
+		
     }
+	/** Process input file. Creates a new compilation unit. */
 	
 	public void checker(String[] args) {
 		process(
@@ -58,9 +62,9 @@ public class CleanJavaChecker extends Frontend {
 				}
 			}
 		);
-  }
+	}
 	
-	
+	//Properties configuration from JastAddJ7
 	protected ResourceBundle resources = null;
 	protected String resourcename = "JastAddJ";
 	protected String getString(String key) {
