@@ -35,6 +35,7 @@
 		<copy file="resources/JastAddJ.txt" toFile="JastAddJ.properties">
 			<filterset>
 				<filter token="VERSION" value="R${build.date}"/>
+				<filter token="CJCBUILD" value="R${build.date}"/>
 			</filterset>
 		</copy>
 	</target>
