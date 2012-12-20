@@ -87,7 +87,7 @@ public class TypeCheckingTest {
 		assertEquals("",runChecker(setUp,testCase));
 	}
 	
-	/** Test informal description 2 (different types) */
+	/** Test informal description 2 (different type) */
 	@Test
 	public void testTypeChecking08() {
 		String setUp = "int x;";

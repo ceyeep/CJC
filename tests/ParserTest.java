@@ -114,6 +114,64 @@ public class ParserTest {
 		assertParseOk("/*@[ x := 5 ] @*/");
 	}
 	
+	/** Test multiple line notation */
+	@Test
+	public void testParser14() {
+		assertParseOk("/*@[ x := 5 ]\n"+
+		"@*/");
+	}
+	
+	/** Test comments inside of CJ annotations */
+	@Test
+	public void testParser15() {
+		assertParseOk("/*@[ x := 5 ]\n" +
+						"//a comment\n"+
+						"@*/");
+	}
+	
+	/** Test comments inside of CJ annotations */
+	@Test
+	public void testParser16() {
+		assertParseOk("/*@[ x := 5 ]\n" +
+						"//a comment\n"+
+						"@*/");
+	}
+	
+	/** Test anything keyword */
+	@Test
+	public void testParser17() {
+		assertParseOk("//@[ x := \\anything ]");
+	}
+	
+	/** Test informal notation */
+	@Test
+	public void testParser18() {
+		assertParseOk("//@[ x := (* informal notaiton *) ]");
+	}
+	
+	/** Test conditional concurrent assignment */
+	@Test
+	public void testParser19() {
+		assertParseOk("//@[ x > 0 -> x := 3 ]");
+	}
+	
+	/** Test conditional concurrent assignment with else statement */
+	@Test
+	public void testParser20() {
+		assertParseOk("/*@[ x > 0 -> x := 3 ]\n" +
+						"\\else x := 4]\n"+
+						"@*/");
+	}
+	
+	/** Test conditional concurrent assignment with else statement
+		and I literal*/
+	@Test
+	public void testParser21() {
+		assertParseOk("/*@[ x > 0 -> x := 3 ]\n" +
+						"\\else \\I]\n"+
+						"@*/");
+	}
+	
 	//TEST PARSER FAILS
 	
 	/** Test missing value in the right side of the assignment expression */
@@ -210,7 +268,6 @@ public class ParserTest {
 		String stub = "public class Test{\n";
 		stub+=testCase;
 		stub+="\npublic void foo(){}\n}";
-		//System.out.println(stub);
 		return stub;
 	}
 	
@@ -221,7 +278,6 @@ public class ParserTest {
 		stub+=intendedFunction+"\n";
 		stub+=code;
 		stub+="\n\n}";
-		//System.out.println(stub);
 		return stub;
 	}
 	
