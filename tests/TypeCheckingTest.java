@@ -11,18 +11,22 @@
  ******************************************************************************/
 package tests;
 
+import static org.junit.Assert.*;
+import org.junit.Test;
+
 import java.io.*;
-import junit.framework.TestCase;
+
 import cleanJavaTools.CleanJavaChecker;
 
 /** This class contains test cases for type checking. 
  *	@author ceyeep
  */
-public class TypeCheckingTest extends TestCase {
-  
-	public static final String FILENAME = "test/TestFile.java";
+public class TypeCheckingTest {
+	public static final String FILENAME = "TempTestFile";
+	public static final String PATH = "test"+File.separator+FILENAME+".java";
     
-	// Test simple integer assignment
+	/** Test simple integer assignment */
+	@Test
 	public void testTypeChecking01() {
 		String setUp = " int x; ";
 		String testCase = " //@ [ x := 3] ";
@@ -30,7 +34,8 @@ public class TypeCheckingTest extends TestCase {
 		
 	}
 	
-	// Test using keyword this
+	/** Test using keyword this */
+	@Test
 	public void testTypeChecking02() {
 		String setUp = "int x;";
 		String testCase = " //@ [ this.x := 3]";
@@ -38,7 +43,8 @@ public class TypeCheckingTest extends TestCase {
 		
 	}
 	
-	// Test using an undeclared variable
+	/** Test using an undeclared variable */
+	@Test
 	public void testTypeChecking03() {
 		String setUp = "int x;";
 		String testCase = " //@ [ y := 3]";
@@ -46,7 +52,8 @@ public class TypeCheckingTest extends TestCase {
 		
 	}
 	
-	// Test using different types
+	/** Test using different types */
+	@Test
 	public void testTypeChecking04() {
 		String setUp = "int x;";
 		String testCase = " //@ [ x := \"hello\"]";
@@ -55,7 +62,8 @@ public class TypeCheckingTest extends TestCase {
 		
 	}
 	
-	// Test multple assignment
+	/** Test multple assignment */
+	@Test
 	public void testTypeChecking05() {
 		String setUp = "int x, y;";
 		String testCase = " //@ [ x, y := 1,2]";
@@ -63,21 +71,24 @@ public class TypeCheckingTest extends TestCase {
 		
 	}
 	
-	// Test unbalanced concurrent assignment
+	/** Test unbalanced concurrent assignment */
+	@Test
 	public void testTypeChecking06() {
 		String setUp = "int x, y;";
 		String testCase = "//@ [ x, y := 3]";
 		assertEquals("Semantic Error: concurrent assignment is unbalanced",runChecker(setUp,testCase));
 	}
 	
-	// Test informal description 1
+	/** Test informal description 1 */
+	@Test
 	public void testTypeChecking07() {
 		String setUp = "boolean flag;";
 		String testCase = "//@ [ flag := (* informal description *) ]";
 		assertEquals("",runChecker(setUp,testCase));
 	}
 	
-	// Test informal description 2 (different types)
+	/** Test informal description 2 (different types) */
+	@Test
 	public void testTypeChecking08() {
 		String setUp = "int x;";
 		String testCase = "//@ [ x := (* informal description *) ]";
@@ -85,7 +96,7 @@ public class TypeCheckingTest extends TestCase {
 	}
 	
 	/*
-	// Test concurrent assingment variable duplicate
+	// Test concurrent assignment variable duplicate
 	public void testTypeChecking09() {
 		String setUp = "int x;";
 		String testCase = "//# [ x, x := 2, 3 ]";
@@ -102,35 +113,41 @@ public class TypeCheckingTest extends TestCase {
 	}
 	*/
 	
-	// Test "anything" literal
+	/** Test "anything" literal */
+	@Test
 	public void testTypeChecking11() {
 		String setUp = "int x;";
 		String testCase = "//@ [ x := \\anything ]";
 		assertEquals("",runChecker(setUp,testCase));
 	}
 	
-	// Test "anything" literal with an object
+	/** Test "anything" literal with an object */
+	@Test
 	public void testTypeChecking12() {
 		String setUp = "String s = \"\";";
 		String testCase = "//@ [ s := \\anything ]";
 		assertEquals("",runChecker(setUp,testCase));
 	}
 	
-	// Test conditional concurrent assignments 
+	/** Test conditional concurrent assignments */
+	@Test
 	public void testTypeChecking13() {
 		String setUp = "int x = 2;";
 		String testCase = "//@ [ x > 0 -> x := 3 ]";
 		assertEquals("",runChecker(setUp,testCase));
 	}
 	
-	// Test conditional concurrent assignments (else statement)
+	/** Test conditional concurrent assignments (else statement) */
+	@Test
 	public void testTypeChecking14() {
 		String setUp = "int x = 2;";
 		String testCase = "//@ [ x > 0 -> x := 3 \\else x > 10 -> x := 20 ]";
 		assertEquals("",runChecker(setUp,testCase));
 	}
 	
-	// Test conditional concurrent assignments (multiple else statements and identity function)
+	/** Test conditional concurrent assignments 
+	(multiple else statements and identity function) */
+	@Test
 	public void testTypeChecking15() {
 		String setUp = "int x = 2;";
 		String testCase = "//@ [ x > 0 -> x := 3 \\else x > 10 -> x := 20 \\else \\I]";
@@ -164,13 +181,13 @@ public class TypeCheckingTest extends TestCase {
 			fail(e.getMessage());
 		}
 
-		return new CleanJavaChecker(new String[]{FILENAME}).getErrors();
+		return new CleanJavaChecker(new String[]{PATH}).getErrors();
 	}
 	
 	/** Creates a stub for the testcase. */
 	protected static String createStub(String testCase)
 	{
-		String stub = "public class TestFile{\n";
+		String stub = "public class " + FILENAME +"{\n";
 		stub+=testCase;
 		stub+="\n\tpublic void foo(){}\n}";
 		return stub;
@@ -179,7 +196,7 @@ public class TypeCheckingTest extends TestCase {
 	/** Creates a new java file from the stub. */
 	protected static void createFile(String code) throws IOException
 	{
-		File file = new File(FILENAME);
+		File file = new File(PATH);
 		FileOutputStream fop = new FileOutputStream(file);
 
 		if(file.exists()){

@@ -38,7 +38,7 @@ public class CleanJavaChecker extends Frontend {
 	
 	/** Process compiler errors. */
 	protected void processErrors(Collection errors, CompilationUnit unit) {
-		System.out.println("Errors:");
+		System.err.println("Errors:");
 		for(Iterator<Problem> iter2 = errors.iterator(); iter2.hasNext(); ) {
 			Problem problem = iter2.next();
 			System.err.println(problem.toString());
@@ -80,15 +80,15 @@ public class CleanJavaChecker extends Frontend {
 	
 	//Version printing extension from Frontend
 	
-	protected void printVersion() {
+	public void printVersion() {
       System.out.println(name() + " Version " + version() + " Build " + build());
     }
 	
-	protected void printLongVersion() {
+	public void printLongVersion() {
       System.out.println(longName() + " " + url() + " Version " + version() + " Build " + build());
     }
 	
-	protected void printUsage() {
+	public void printUsage() {
       printLongVersion();
       System.out.println(
           "\nUsage: java " + name() + " <options> <source files>\n" +
@@ -103,9 +103,9 @@ public class CleanJavaChecker extends Frontend {
           );
     }
 
-	protected String name() { return getString("cjc.Name"); }
-	protected String longName() { return getString("cjc.LongName"); }
-	protected String version() { return getString("cjc.Version"); }
-	protected String build() { return getString("cjc.Build"); }
-	protected String url() { return getString("cjc.URL"); }
+	public String name() { return getString("cjc.Name"); }
+	public String longName() { return getString("cjc.LongName"); }
+	public String version() { return getString("cjc.Version"); }
+	public String build() { return getString("cjc.Build"); }
+	public String url() { return getString("cjc.URL"); }
 }

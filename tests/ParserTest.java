@@ -11,14 +11,18 @@
  ******************************************************************************/
 package tests;
 
-import java.io.*;
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
+import org.junit.Test;
+
 import cleanJavaTools.JavaChecker;
+
 import AST.BytecodeParser;
 import AST.CompilationUnit;
 import AST.JavaParser;
 import AST.Problem;
 import beaver.Parser;
+
+import java.io.*;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Iterator;
@@ -28,89 +32,114 @@ import java.lang.StringBuffer;
 /** This class contains a set of test cases for the CleanJava parser.
  *  @author ceyeep
  */
-public class ParserTest extends TestCase {
+public class ParserTest {
  
-	// Test using this keyword
+	//TEST PARSER
+ 
+	/** Test using this keyword */
+	@Test
 	public void testParser01() {
 		assertParseOk("//@[this.x := 3]");
 	}
 	
-	// Test simple assignment
+	/** Test single line notation assignment */
+	@Test
 	public void testParser02() {
 		assertParseOk("//@[ x := 5 ]");
 	}
 	
-	// Test object field assignment
+	/** Test object field assignment */
+	@Test
 	public void testParser03() {
 		assertParseOk("//@[object.x := 3]");
 	}
 	
-	// Test using simple addition expression
+	/** Test using simple addition expression */
+	@Test
 	public void testParser04() {
 		assertParseOk("//@[ x :=  + 4 ]");
 	}
 	
-	// Test using simple addition expression
+	/** Test using simple addition expression */
+	@Test
 	public void testParser05() {
 		assertParseOk("//@[ x := x + 4 ]");
 	}
 	
-	// Test multiple assignments
+	/** Test multiple assignments */
+	@Test
 	public void testParser06() {
 		assertParseOk("//@[ zero, z  := zero, zero +1 ]");
 	}
 	
-	// Test constructor declaration
+	/** Test constructor declaration */
+	@Test
 	public void testParser07() {
 		assertParseOk("//@[ x := 3 ]","public Test(){ x = 3; }");
 	}
 	
-	// Test instance initializer
+	/** Test instance initializer */
+	@Test
 	public void testParser08() {
 		assertParseOk("//@[ x := 3 ]","{ x = 3; }");
 	}
 	
-	// Test static initializer
+	/** Test static initializer */
+	@Test
 	public void testParser09() {
 		assertParseOk("//@[ x := 3 ]","static { x = 3; }");
 	}
 	
-	// Test instance initializer
+	/** Test instance initializer */
+	@Test
 	public void testParser10() {
 		assertParseOk("//@[ x := 3 ]","{ x = 3; }");
 	}
 	
-	// Test intended function with multiple lines
+	/** Test intended function with multiple lines */
+	@Test
 	public void testParser11() {
 		assertParseOk("/*@ [ x, y := \n 3, 4 ] #*/","{ x = 3; }");
 	}
 		
-	// Test simple assignment (no blank spaces)
+	/** Test simple assignment (no blank spaces) */
+	@Test
 	public void testParser12() {
 		assertParseOk("//@[x:=5]");
 	}
 	
+	/** Test multiple line notation */
+	@Test
+	public void testParser13() {
+		assertParseOk("/*@[ x := 5 ] @*/");
+	}
 	
-	// Test missing value in the right side of the assignment expression
+	//TEST PARSER FAILS
+	
+	/** Test missing value in the right side of the assignment expression */
+	@Test
 	public void testParserFail01() {
 		assertParseError("//@[x := ]");
 	}
 	
-	// Test incorrect assingment symbol
+	/** Test incorrect assingment symbol */
+	@Test
 	public void testParserFail02() {
 		assertParseError("//@[x : 3]");
 	}
 	
-	// Test unclosed square bracket
+	/** Test unclosed square bracket */
+	@Test
 	public void testParserFail03() {
 		assertParseError("//@[x := 3");
 	}
 	
-	// Test right-side side-effects
+	/** Test right-side side-effects */
+	@Test
 	public void testParserFail04() {
 		assertParseError("//@[x := x++]");
 	}
-	
+		
 	
 	/** Check if there are no parsing errors for a given testcase. */
 	protected static void assertParseOk(String intendedFunction) {

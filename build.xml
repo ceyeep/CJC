@@ -49,7 +49,7 @@
 			<classpath>
 				<pathelement path="."/>
 				<pathelement path="${tools}/beaver-rt.jar"/>
-				<pathelement path="${lib}/junit.jar"/>
+				<pathelement path="${lib}/junit-4.11.jar"/>
 			</classpath>
 		</javac>
 	</target>
@@ -256,13 +256,20 @@
 
 	<!-- test CleanJava checker module -->
 	<target name="test" depends="build">
-		<!-- Run all tests in dir by using the TestAll java program -->
-		<java 
-			classname="testFramework.TestAll"
-			classpath=".:${tools}/beaver-rt.jar:${lib}/junit.jar" 
-			fork="true" 
-			dir="."
-		/>
+		<junit fork="yes" haltonfailure="yes">
+			<classpath>
+				<pathelement path="."/>
+				<fileset dir="lib">
+					<include name="**/*.jar"/>
+				</fileset>
+			</classpath>
+			<batchtest>
+				<formatter type="brief" usefile="false"/>
+				<fileset dir=".">
+					<include name="testFramework/AllTests.java"/>
+				</fileset>
+			</batchtest>
+		</junit>
 	</target>
 	
 	<!-- test CleanJava checker parser -->
@@ -300,6 +307,44 @@
 				<include name="tests/TypeCheckingTest.java"/>
 			</fileset>
 		  </batchtest>
+		</junit>
+	</target>
+	
+	<!-- test principal CleanJava features -->
+	<target name="test-features" depends="build">
+		<junit>
+			
+			<classpath>
+				<pathelement path="."/>
+				<fileset dir="lib">
+					<include name="**/*.jar"/>
+				</fileset>
+			</classpath>
+			<batchtest>
+				<formatter type="brief" usefile="false"/>
+				<fileset dir=".">
+					<include name="tests/FeaturesTest.java"/>
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+	
+	<!-- test CleanJava checker frontend -->
+	<target name="test-frontend" depends="build">
+		<junit>
+			
+			<classpath>
+				<pathelement path="."/>
+				<fileset dir="lib">
+					<include name="**/*.jar"/>
+				</fileset>
+			</classpath>
+			<batchtest>
+				<formatter type="brief" usefile="false"/>
+				<fileset dir=".">
+					<include name="tests/CleanJavaCheckerTest.java"/>
+				</fileset>
+			</batchtest>
 		</junit>
 	</target>
 
