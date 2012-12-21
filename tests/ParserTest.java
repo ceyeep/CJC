@@ -29,6 +29,8 @@ import java.util.Iterator;
 import java.util.ArrayList;
 import java.lang.StringBuffer;
 
+import testFramework.TestUtilities;
+
 /** This class contains a set of test cases for the CleanJava parser.
  *  @author ceyeep
  */
@@ -192,12 +194,32 @@ public class ParserTest {
 		assertParseError("//@[x := 3");
 	}
 	
-	/** Test right-side side-effects */
+	/** Test right-side side-effects (++)*/
 	@Test
 	public void testParserFail04() {
 		assertParseError("//@[x := x++]");
 	}
+	
+	/** Test right-side side-effects (=) */
+	@Test
+	public void testParserFail05() {
+		String setUp = " int x; ";
+		String testCase = "//@[x := x = 2]";
+		String errorMessage = "Lexical Error: illegal character \"=\"\n"+
+						"Syntactic Error: unexpected token \"2\"";
+		assertEquals(errorMessage,TestUtilities.runChecker(setUp,testCase));
+	}
+	
+	/** Test right-side side-effects (+=) */
+	@Test
+	public void testParserFail06() {
+		String setUp = " int x; ";
+		String testCase = "//@[x := x += 2]";
+		String errorMessage = "Lexical Error: illegal character \"=\"";
+		assertEquals(errorMessage,TestUtilities.runChecker(setUp,testCase));
+	}
 		
+	//Utility methods
 	
 	/** Check if there are no parsing errors for a given testcase. */
 	protected static void assertParseOk(String intendedFunction) {
@@ -262,7 +284,7 @@ public class ParserTest {
 	}
 	
 	
-	/** Creates a method stub for the given testcase. */
+	/* Creates a method stub for the given testcase. */
 	protected static String createStub(String testCase)
 	{
 		String stub = "public class Test{\n";
@@ -271,7 +293,7 @@ public class ParserTest {
 		return stub;
 	}
 	
-	/** Creates a class stub for the given testcase (specific annotated coded). */
+	/* Creates a class stub for the given testcase (specific annotated coded). */
 	protected static String createStub(String intendedFunction, String code)
 	{
 		String stub = "public class Test{\n";
@@ -281,7 +303,7 @@ public class ParserTest {
 		return stub;
 	}
 	
-	/** Creates a new Scanner and Parser and parses the given testcase. */
+	/* Creates a new Scanner and Parser and parses the given testcase. */
 	protected static void parse(String s) throws Throwable, beaver.Parser.Exception{
 		parser.JavaParser parser = new parser.JavaParser();
 		Reader reader = new StringReader(s);
@@ -290,5 +312,6 @@ public class ParserTest {
 		parser.parse(scanner);
 		reader.close();
 	}
+
 	
 }

@@ -30,7 +30,7 @@ public class CleanJavaCheckerTest {
 	public void testGetErrors01(){
 		String[] args = {"tests"+File.separator+"javaTestFiles"+File.separator+"JavaTestFile01.java"};
 		checker = new CleanJavaChecker(args);
-		assertEquals("",checker.getErrors());
+		assertTrue(checker.getErrors().size()<1);
 	}
 	
 	/** Test a file wih CJ errors. */
@@ -38,7 +38,7 @@ public class CleanJavaCheckerTest {
 	public void testGetErrors02(){
 		String[] args = {"tests"+File.separator+"javaTestFiles"+File.separator+"JavaTestFile02.java"};
 		checker = new CleanJavaChecker(args);
-		assertTrue(checker.getErrors().length()>0);
+		assertTrue(checker.getErrors().size()>0);
 	}
 	
 	/** Test get string key from resource. */

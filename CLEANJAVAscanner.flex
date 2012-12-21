@@ -165,7 +165,6 @@
 
   
   // 3.12 Operators
-  "="                            { return sym(Terminals.EQ); }
   ">"                            { return sym(Terminals.GT); }
   "<"                            { return sym(Terminals.LT); }
   "!"                            { return sym(Terminals.NOT); }

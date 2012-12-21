@@ -32,7 +32,7 @@ public class FeaturesTest {
 	public void testFeaturesFile(){
 		String[] args = {"test"+File.separator+"TestFile.java"};
 		checker = new CleanJavaChecker(args);
-		assertEquals("",checker.getErrors());
+		assertTrue(checker.getErrors().size()<1);
 	}
 
 

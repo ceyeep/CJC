@@ -28,16 +28,16 @@ public class Test {
 		x = 5;
 	}
 	
-	/*@[zero := \anything + 3]
+	/*[zero := \anything + 3]
 	*/
 	static
 	{
 		zero = 0;
 	}
 	 
-	/*@ 
+	/* 
 		[ bit :=  (*informal notation*) ]
-	@*/
+	*/
 	public static void main(String[] args) {
 		// [bit := false ]
 		{

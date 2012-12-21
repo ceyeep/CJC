@@ -16,8 +16,8 @@ import java.util.*;
 
 public class CleanJavaChecker extends Frontend {
 
-	//TODO: consider changing string to a collection of errors
-	private String errorString = "";
+	/** ArrayList containing compilation error messages (simple version for testing purposes). */
+	private ArrayList<Problem> errorList = new ArrayList<Problem>();
 	
 	public static void main(String args[]) {
 		CleanJavaChecker checker = new CleanJavaChecker(args);
@@ -30,9 +30,22 @@ public class CleanJavaChecker extends Frontend {
 		checker(args);
 	}
 	
-	/** Get error string used for testing purposes. */
-	public String getErrors()
+	/** Get error list (used for testing purposes). */
+	public ArrayList<Problem> getErrors()
 	{
+		return errorList;
+	}
+	
+	/** Get error list in a string object (used for testing purposes). */
+	public String getErrorString()
+	{
+		String errorString = "";
+		
+		for(Iterator<Problem> it = errorList.iterator(); it.hasNext(); ){
+			errorString += it.next().toSimpleString();
+			if(it.hasNext())
+				errorString += "\n";
+		}
 		return errorString;
 	}
 	
@@ -42,11 +55,8 @@ public class CleanJavaChecker extends Frontend {
 		for(Iterator<Problem> iter2 = errors.iterator(); iter2.hasNext(); ) {
 			Problem problem = iter2.next();
 			System.err.println(problem.toString());
-			errorString += problem.toSimpleString();
-			if(iter2.hasNext())
-				errorString += "\n";
+			errorList.add(problem);
 		}
-		
     }
 	/** Process input file. Creates a new compilation unit. */
 	public void checker(String[] args) {
