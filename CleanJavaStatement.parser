@@ -37,12 +37,10 @@ ExprAndAbstractSimpleConcurrentAssignment  expression_and_abstract_simple_concur
 	expression.e THEN abstract_simple_concurrent_assignment.s  {: return new ExprAndAbstractSimpleConcurrentAssignment(e, s); :}
   ;
   
-// This should be in CleanJava expressions  
 Identity identity = 
 	IDENTITY_LITERAL        {: return new Identity(); :}
   ;
 
-  
   
 /* List of expressions in intended function
 
