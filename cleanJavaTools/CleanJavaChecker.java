@@ -1,14 +1,26 @@
+
 /*******************************************************************************
- * Copyright (c) 2012 Cesar Yeep.
+ * Copyright (c) 2013 Cesar Yeep.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the BSD 3-Clause License
  * ("New BSD" or "BSD Simplified") which accompanies this distribution,
  * and is available at
  * http://opensource.org/licenses/BSD-3-Clause
  * 
- * Contributors:
+ * Contributors of CleanJavaChecker (frontend):
  *     Cesar Yeep - initial API and implementation
- ******************************************************************************/
+ *
+ * The CleanJava checker frontend is a modified and extended version of the 
+ * original JastAddJ Compiler that includes the following license statement:
+ *
+ * The JastAdd Extensible Java Compiler (http://jastadd.org) is covered
+ * by the modified BSD License. You should have received a copy of the
+ * modified BSD license with this compiler.
+ * 
+ * Copyright (c) 2005-2008, Torbjorn Ekman
+ *		 2011	    Jesper Öqvist <jesper.oqvist@cs.lth.se>
+ * All rights reserved.
+ *******************************************************************************/
 package cleanJavaTools;
 
 import AST.*;

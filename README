@@ -17,22 +17,22 @@ CleanJava Checker (CJC) Source Distribution - Readme File
 	- To set the project to its original state type "ant clean"
 
 - Working with CJC:
-	- Run the checker by typing "java cleanJavaTools/CleanJavaChecker <File directory>/<Filename>.java"
+	- Run the checker by typing "java cleanJavaTools/CleanJavaChecker <File path>/<Filename>.java"
 		in a command prompt, or using the cjc.bat batch file in a Windows command prompt
-		"cjc <File directory>/<Filename>.java"
-	- Run the pretty printer by typing "java cleanJavaTools/JavaPrettyPrinter <File directory>/[Filename].java"
-	- View the program's generated AST by typing "java cleanJavaTools/JavaDumpTree <File directory>/[Filename].java" 
+		"cjc <File path>/<Filename>.java"
+	- Run the pretty printer by typing "java cleanJavaTools/JavaPrettyPrinter <File path>/[Filename].java"
+	- View the program's generated AST by typing "java cleanJavaTools/JavaDumpTree <File path>/[Filename].java" 
 	- Type "java cleanJavaTools/CleanJavaChecker -help" to view all available command line options
 		
 
 - ANT options:
-	- build: default ANT option, compile JastAdd and Java files
-	- clean: delete build generated files
-	- test: run JUnit test suites
-	- test-parser: run parser test suite
-	- test-typechecking: run type checking test suite
-	- jar: create a binary file distribution contained in a JAR file
-	- source: create a source file distribution
+	- build: default ANT option, compiles JastAdd and Java files
+	- clean: deletes build generated files
+	- test: runs JUnit test suites
+	- test-parser: runs parser test suite
+	- test-typechecking: runs type checking test suite
+	- jar: creates a binary file distribution contained in a JAR file
+	- source: creates a source file distribution
 	- doc: generates documentation in HTML form using AST's Javadoc annotations 
 		(generated in "doc" directory)
 		
@@ -60,4 +60,4 @@ CleanJava Checker (CJC) Source Distribution - Readme File
 	JastAdd (BSD license)
 	jflex (lexer generator) (GPL license)
 	beaver (parser generator) (BSD license)
-	junit (testing tool) (Common Public License)
+	junit 4 (testing tool) (Common Public License)

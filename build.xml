@@ -40,8 +40,7 @@
 		</copy>
 	</target>
 
-	<target name="build" depends="gen,prepare" 
-		description="Compile CleanJava Checker">
+	<target name="build" depends="gen,prepare" description="Compile CleanJava Checker">
 		<javac debug="true" nowarn="true" srcdir="."
 			includeantruntime="true">
 			<include name="**/*.java"/>
@@ -49,13 +48,12 @@
 			<classpath>
 				<pathelement path="."/>
 				<pathelement path="${tools}/beaver-rt.jar"/>
-				<pathelement path="${lib}/junit-4.11.jar"/>
+				<pathelement path="${lib}/junit.jar"/>
 			</classpath>
 		</javac>
 	</target>
 
-	<target name="doc" depends="gen"
-		description="Build ReRAG documentation">
+	<target name="doc" depends="gen" description="Build ReRAG documentation">
 		<mkdir dir="doc"/>
 		<javadoc destdir="doc" docletpath="${tools.dir}/RagDoll.jar"
 			doclet="ragdoll.RagDollDoclet">
@@ -219,13 +217,38 @@
 		<delete dir="parser"/>
 	</target>
 
-	<!-- build binaries -->
-	<target name="jar" depends="build">
+	<!-- build project executable jar file -->
+	<target name="jar" depends="jar-checker,jar-prettyprinter,jar-dumptree" />
+	
+	<!-- build checker exectuable jar file -->
+	<target name="jar-checker" depends="build">
 	  <jar destfile="CleanJavaChecker.jar" >
 		<fileset dir="${basedir}" includes="**/*.class" excludes="test/**" />
 		<fileset dir="${basedir}" includes="**/*.properties"/>
 		<manifest>
 		  <attribute name="Main-Class" value="cleanJavaTools.CleanJavaChecker"/>
+		</manifest>
+	  </jar>
+	</target>
+	
+	<!-- build pretty printer exectuable jar file -->
+	<target name="jar-prettyprinter" depends="build">
+	  <jar destfile="JavaPrettyPrinter.jar" >
+		<fileset dir="${basedir}" includes="**/*.class" excludes="test/**" />
+		<fileset dir="${basedir}" includes="**/*.properties"/>
+		<manifest>
+		  <attribute name="Main-Class" value="cleanJavaTools.JavaPrettyPrinter"/>
+		</manifest>
+	  </jar>
+	</target>
+	
+	<!-- build dump tree exectuable jar file -->
+	<target name="jar-dumptree" depends="build">
+	  <jar destfile="JavaDumpTree.jar" >
+		<fileset dir="${basedir}" includes="**/*.class" excludes="test/**" />
+		<fileset dir="${basedir}" includes="**/*.properties"/>
+		<manifest>
+		  <attribute name="Main-Class" value="cleanJavaTools.JavaDumpTree"/>
 		</manifest>
 	  </jar>
 	</target>
