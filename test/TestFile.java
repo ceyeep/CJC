@@ -111,9 +111,11 @@ public class TestFile{
 		max = Math.max(x, y) + 10;
 	}
 	
-	//(MISSING TEST) \result - type checking
+	//@ [ \result := x + y ]
+	public double resultNotation(){
+		return x + y;
+	}
 	
-		
 	//Iterate operators
 		//(MISSING TEST) =>
 	
@@ -132,7 +134,6 @@ public class TestFile{
 		y = 2;
 		z = 3;
 	}
-	
 	
 	//(MISSING TEST)Object equality := vs &=
 	

@@ -36,8 +36,8 @@ public class TestUtilities {
 	 *  @param testCase Contains current testcase.
 	*/
 	public String runChecker(String setUp, String testCase) {
-		testCase = setUp + "\n\n" + testCase;
-		return runChecker(testCase);
+		String test = setUp + "\n\n" + testCase;
+		return runChecker(test);
 	}
 
 	

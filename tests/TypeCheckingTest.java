@@ -45,7 +45,7 @@ public class TypeCheckingTest {
 	
 	//Tests
     
-	/** Test simple integer assignment */
+	/** Test simple integer assignment. */
 	@Test
 	public void testTypeChecking01() {
 		String setUp = " int x; ";
@@ -54,7 +54,7 @@ public class TypeCheckingTest {
 		
 	}
 	
-	/** Test using keyword this */
+	/** Test using keyword this. */
 	@Test
 	public void testTypeChecking02() {
 		String setUp = "int x;";
@@ -63,7 +63,7 @@ public class TypeCheckingTest {
 		
 	}
 	
-	/** Test using an undeclared variable */
+	/** Test using an undeclared variable. */
 	@Test
 	public void testTypeChecking03() {
 		String setUp = "int x;";
@@ -72,7 +72,7 @@ public class TypeCheckingTest {
 		
 	}
 	
-	/** Test using different types */
+	/** Test using different types. */
 	@Test
 	public void testTypeChecking04() {
 		String setUp = "int x;";
@@ -82,7 +82,7 @@ public class TypeCheckingTest {
 		
 	}
 	
-	/** Test multple assignment */
+	/** Test multple assignment. */
 	@Test
 	public void testTypeChecking05() {
 		String setUp = "int x, y;";
@@ -91,7 +91,7 @@ public class TypeCheckingTest {
 		
 	}
 	
-	/** Test unbalanced concurrent assignment */
+	/** Test unbalanced concurrent assignment. */
 	@Test
 	public void testTypeChecking06() {
 		String setUp = "int x, y;";
@@ -99,7 +99,7 @@ public class TypeCheckingTest {
 		assertEquals("Semantic Error: concurrent assignment is unbalanced",testUtilities.runChecker(setUp,testCase));
 	}
 	
-	/** Test informal description 1 */
+	/** Test informal description 1. */
 	@Test
 	public void testTypeChecking07() {
 		String setUp = "boolean flag;";
@@ -107,7 +107,7 @@ public class TypeCheckingTest {
 		assertEquals("",testUtilities.runChecker(setUp,testCase));
 	}
 	
-	/** Test informal description 2 (different type) */
+	/** Test informal description 2 (different type). */
 	@Test
 	public void testTypeChecking08() {
 		String setUp = "int x;";
@@ -133,7 +133,7 @@ public class TypeCheckingTest {
 	}
 	*/
 	
-	/** Test "anything" literal */
+	/** Test "anything" literal. */
 	@Test
 	public void testTypeChecking11() {
 		String setUp = "int x;";
@@ -141,7 +141,7 @@ public class TypeCheckingTest {
 		assertEquals("",testUtilities.runChecker(setUp,testCase));
 	}
 	
-	/** Test "anything" literal with an object */
+	/** Test "anything" literal with an object. */
 	@Test
 	public void testTypeChecking12() {
 		String setUp = "String s = \"\";";
@@ -149,7 +149,7 @@ public class TypeCheckingTest {
 		assertEquals("",testUtilities.runChecker(setUp,testCase));
 	}
 	
-	/** Test conditional concurrent assignments */
+	/** Test conditional concurrent assignments. */
 	@Test
 	public void testTypeChecking13() {
 		String setUp = "int x = 2;";
@@ -157,7 +157,7 @@ public class TypeCheckingTest {
 		assertEquals("",testUtilities.runChecker(setUp,testCase));
 	}
 	
-	/** Test conditional concurrent assignments (else statement) */
+	/** Test conditional concurrent assignments (else statement). */
 	@Test
 	public void testTypeChecking14() {
 		String setUp = "int x = 2;";
@@ -166,11 +166,19 @@ public class TypeCheckingTest {
 	}
 	
 	/** Test conditional concurrent assignments 
-	(multiple else statements and identity function) */
+	(multiple else statements and identity function). */
 	@Test
 	public void testTypeChecking15() {
 		String setUp = "int x = 2;";
 		String testCase = "//@ [ x > 0 -> x := 3 \\else x > 10 -> x := 20 \\else \\I]";
 		assertEquals("",testUtilities.runChecker(setUp,testCase));
+	}
+	
+	/** Test a method with a return statement. */
+	@Test
+	public void testTypeChecking16() {
+		String testCase = "//@ [ \\result := 5 ]";
+		String code = "public int foo1(){return 5;}";
+		assertEquals("",testUtilities.runChecker(testCase,code));
 	}
 }

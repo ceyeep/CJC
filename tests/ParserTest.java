@@ -51,92 +51,92 @@ public class ParserTest {
  
 	//tests
  
-	/** Test using this keyword */
+	/** Test using this keyword. */
 	@Test
 	public void testParser01() {
 		assertParseOk("//@[this.x := 3]");
 	}
 	
-	/** Test single line notation assignment */
+	/** Test single line notation assignment. */
 	@Test
 	public void testParser02() {
 		assertParseOk("//@[ x := 5 ]");
 	}
 	
-	/** Test object field assignment */
+	/** Test object field assignment. */
 	@Test
 	public void testParser03() {
 		assertParseOk("//@[object.x := 3]");
 	}
 	
-	/** Test using simple addition expression */
+	/** Test using simple addition expression. */
 	@Test
 	public void testParser04() {
 		assertParseOk("//@[ x :=  + 4 ]");
 	}
 	
-	/** Test using simple addition expression */
+	/** Test using simple addition expression. */
 	@Test
 	public void testParser05() {
 		assertParseOk("//@[ x := x + 4 ]");
 	}
 	
-	/** Test multiple assignments */
+	/** Test multiple assignments. */
 	@Test
 	public void testParser06() {
 		assertParseOk("//@[ zero, z  := zero, zero +1 ]");
 	}
 	
-	/** Test constructor declaration */
+	/** Test constructor declaration. */
 	@Test
 	public void testParser07() {
 		assertParseOk("//@[ x := 3 ]","public Test(){ x = 3; }");
 	}
 	
-	/** Test instance initializer */
+	/** Test instance initializer. */
 	@Test
 	public void testParser08() {
 		assertParseOk("//@[ x := 3 ]","{ x = 3; }");
 	}
 	
-	/** Test static initializer */
+	/** Test static initializer. */
 	@Test
 	public void testParser09() {
 		assertParseOk("//@[ x := 3 ]","static { x = 3; }");
 	}
 	
-	/** Test instance initializer */
+	/** Test instance initializer. */
 	@Test
 	public void testParser10() {
 		assertParseOk("//@[ x := 3 ]","{ x = 3; }");
 	}
 	
-	/** Test intended function with multiple lines */
+	/** Test intended function with multiple lines. */
 	@Test
 	public void testParser11() {
 		assertParseOk("/*@ [ x, y := \n 3, 4 ] #*/","{ x = 3; }");
 	}
 		
-	/** Test simple assignment (no blank spaces) */
+	/** Test simple assignment (no blank spaces). */
 	@Test
 	public void testParser12() {
 		assertParseOk("//@[x:=5]");
 	}
 	
-	/** Test multiple line notation */
+	/** Test multiple line notation. */
 	@Test
 	public void testParser13() {
 		assertParseOk("/*@[ x := 5 ] @*/");
 	}
 	
-	/** Test multiple line notation */
+	/** Test multiple line notation. */
 	@Test
 	public void testParser14() {
 		assertParseOk("/*@[ x := 5 ]\n"+
 		"@*/");
 	}
 	
-	/** Test comments inside of CJ annotations */
+	/** Test comments inside of CJ annotations. */
 	@Test
 	public void testParser15() {
 		assertParseOk("/*@[ x := 5 ]\n" +
@@ -144,7 +144,7 @@ public class ParserTest {
 						"@*/");
 	}
 	
-	/** Test comments inside of CJ annotations */
+	/** Test comments inside of CJ annotations. */
 	@Test
 	public void testParser16() {
 		assertParseOk("/*@[ x := 5 ]\n" +
@@ -152,25 +152,25 @@ public class ParserTest {
 						"@*/");
 	}
 	
-	/** Test anything keyword */
+	/** Test anything keyword. */
 	@Test
 	public void testParser17() {
 		assertParseOk("//@[ x := \\anything ]");
 	}
 	
-	/** Test informal notation */
+	/** Test informal notation. */
 	@Test
 	public void testParser18() {
 		assertParseOk("//@[ x := (* informal notaiton *) ]");
 	}
 	
-	/** Test conditional concurrent assignment */
+	/** Test conditional concurrent assignment. */
 	@Test
 	public void testParser19() {
 		assertParseOk("//@[ x > 0 -> x := 3 ]");
 	}
 	
-	/** Test conditional concurrent assignment with else statement */
+	/** Test conditional concurrent assignment with else statement. */
 	@Test
 	public void testParser20() {
 		assertParseOk("/*@[ x > 0 -> x := 3 ]\n" +
@@ -179,7 +179,7 @@ public class ParserTest {
 	}
 	
 	/** Test conditional concurrent assignment with else statement
-		and I literal*/
+		and I literal. */
 	@Test
 	public void testParser21() {
 		assertParseOk("/*@[ x > 0 -> x := 3 ]\n" +
@@ -187,33 +187,41 @@ public class ParserTest {
 						"@*/");
 	}
 	
+	/** Test CleanJava result. */
+	@Test
+	public void testParser22() {
+		String testCase = "//@ \\result := 3 ]";
+		String code = "public double foo2(){ return 3; }";
+		assertParseOk(testCase,code);
+	}
+	
 	//TEST PARSER FAILS
 	
-	/** Test missing value in the right side of the assignment expression */
+	/** Test missing value in the right side of the assignment expression. */
 	@Test
 	public void testParserFail01() {
 		assertParseError("//@[x := ]");
 	}
 	
-	/** Test incorrect assingment symbol */
+	/** Test incorrect assingment symbol. */
 	@Test
 	public void testParserFail02() {
 		assertParseError("//@[x : 3]");
 	}
 	
-	/** Test unclosed square bracket */
+	/** Test unclosed square bracket. */
 	@Test
 	public void testParserFail03() {
 		assertParseError("//@[x := 3");
 	}
 	
-	/** Test right-side side-effects (++)*/
+	/** Test right-side side-effects (++). */
 	@Test
 	public void testParserFail04() {
 		assertParseError("//@[x := x++]");
 	}
 	
-	/** Test right-side side-effects (=) */
+	/** Test right-side side-effects (=). */
 	@Test
 	public void testParserFail05() {
 		String setUp = " int x; ";
@@ -223,7 +231,7 @@ public class ParserTest {
 		assertEquals(errorMessage,testUtilities.runChecker(setUp,testCase));
 	}
 	
-	/** Test right-side side-effects (+=) */
+	/** Test right-side side-effects (+=). */
 	@Test
 	public void testParserFail06() {
 		String setUp = " int x; ";
@@ -276,7 +284,7 @@ public class ParserTest {
 		fail("Expected to find parse error in " + intendedFunction+"\n"+code);
 	}
 	
-	/* Creates a method stub for the given testcase. */
+	/** Creates a method stub for the given testcase. */
 	protected static String createStub(String testCase)
 	{
 		String stub = "public class Test{\n";
@@ -285,7 +293,7 @@ public class ParserTest {
 		return stub;
 	}
 	
-	/* Creates a class stub for the given testcase (specific annotated coded). */
+	/** Creates a class stub for the given testcase (specific annotated coded). */
 	protected static String createStub(String intendedFunction, String code)
 	{
 		String stub = "public class Test{\n";
@@ -295,7 +303,7 @@ public class ParserTest {
 		return stub;
 	}
 	
-	/* Creates a new Scanner and Parser and parses the given testcase. */
+	/** Creates a new Scanner and Parser and parses the given testcase. */
 	protected static void parse(String s) throws beaver.Parser.Exception{
 		try(Reader reader = new StringReader(s)){
 			scanner.JavaScanner scanner = new scanner.JavaScanner(new BufferedReader(reader));

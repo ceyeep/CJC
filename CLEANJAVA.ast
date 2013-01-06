@@ -46,20 +46,14 @@ ExprAndAbstractSimpleConcurrentAssignment ::= Condition:Expr Then:AbstractSimple
 
 //CleanJava expressions
 
-abstract CJExpr:Expr;
 
-//Design extends from CJExpr
 InformalDescription:Expr ::= <Description:String>;
 
+CJResult:Expr ;
 
 //Literals
 
-abstract CJLiteral:Literal;
-
-//Design has a CJLiteral
 AnythingLiteral:Literal ;
-
-//ResultLiteral : Literal ;
 
 
 //Iterator operators

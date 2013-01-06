@@ -141,9 +141,7 @@
   
   // CLEANJAVA Literals
   
-  "\\anything"					{ return sym(Terminals.ANYTHING_LITERAL); }
-  "\\I"							{ return sym(Terminals.IDENTITY_LITERAL); }
-  
+  "\\anything"					{ return sym(Terminals.ANYTHING_LITERAL); }  
   
   // CLEANJAVA iterators
   //"\\any" 					{ return sym(Terminals.ANY_ITERATOR); }
@@ -199,7 +197,8 @@
   "\\cj"						{ return sym(Terminals.CJVAR); }
   
   // CLEANJAVA Special symbols
-  //"\\result"					//{ return sym(Terminals.CJRESULT); }
+  "\\result"					{ return sym(Terminals.CJRESULT); }
+   "\\I"						{ return sym(Terminals.IDENTITY); } 
 
   // 3.8 Identifiers located at end of current state due to rule priority disambiguation
   ([:jletter:]|[\ud800-\udfff])([:jletterdigit:]|[\ud800-\udfff])* { return sym(Terminals.IDENTIFIER); }

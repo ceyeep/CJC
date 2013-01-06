@@ -1,3 +1,4 @@
+
 AbstractConcurrentAssignment abstract_concurrent_assignment =
 	START abstract_simple_concurrent_assignment.e RBRACK	{: return e; :}
   |	START conditional_concurrent_assignment.e RBRACK	{: return e; :}
@@ -5,7 +6,7 @@ AbstractConcurrentAssignment abstract_concurrent_assignment =
   
 AbstractSimpleConcurrentAssignment abstract_simple_concurrent_assignment = 
 	simple_concurrent_assignment.a		{: return a; :}
-  |	identity.i  					 	{: return i; :}
+  |	IDENTITY        					{: return new Identity(); :}
   ;
 
 SimpleConcurrentAssignment simple_concurrent_assignment =
@@ -36,10 +37,6 @@ ExprAndAbstractSimpleConcurrentAssignment  expression_and_abstract_simple_concur
 	expression.e THEN abstract_simple_concurrent_assignment.s  {: return new ExprAndAbstractSimpleConcurrentAssignment(e, s); :}
   ;
   
-Identity identity = 
-	IDENTITY_LITERAL        {: return new Identity(); :}
-  ;
-
   
 /* List of expressions in intended function
 

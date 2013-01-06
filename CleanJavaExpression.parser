@@ -1,7 +1,7 @@
+//Informal description
 Expr unary_expression =
 	informal_description.e    {: return e; :}
   ;
-
 
 Expr informal_description =
     CLEAN_INFORMAL.e       {: return new InformalDescription(e); :}
@@ -13,11 +13,11 @@ Expr literal =
 	ANYTHING_LITERAL        {: return new AnythingLiteral(ANYTHING_LITERAL); :}
   ;
 
-/*  
-Expr literal = 
-	RESULT_LITERAL        {: return new ResultLiteral(RESULT_LITERAL); :}
+// Result
+  
+Expr postfix_expression =
+	CJRESULT        {: return new CJResult(); :}
   ;
-*/
   
 // Iterators
 
