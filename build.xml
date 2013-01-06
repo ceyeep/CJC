@@ -18,6 +18,12 @@
 	<!-- local library -->
 	<property name="lib" location="lib"/>
 	
+	<!-- "scannerName" is the name of the file containing the concatenation of all .flex files -->
+	<property name="scannerName" value="JavaScanner"/>
+	
+	<!-- "parserName" is the name of the file containing the concatenation of all .parser files -->
+	<property name="parserName" value="JavaParser"/>
+		
 	<!-- "jflex" is an ant task class for the scanner generator in JFlex.jar -->
 	<taskdef name="jflex" classname="JFlex.anttask.JFlexTask"
 		classpath="${tools.dir}/JFlex.jar"/>
@@ -128,7 +134,7 @@
 	<target name="scanner">
 		<mkdir dir="scanner"/>
 		<!-- compose the scanner -->
-		<concat destfile="scanner/JavaScanner.flex" binary="true" force="false">
+		<concat destfile="scanner/${scannerName}.flex" binary="true" force="false">
 			<filelist dir=".">
 				<file name="CLEANJAVApreamble.flex" />
 				<file name="macros7CLEANJAVA.flex" />
@@ -164,14 +170,14 @@
 			</filelist>
 		</concat>
 		<!-- generate the scanner -->
-		<jflex file="scanner/JavaScanner.flex" outdir="scanner" nobak="yes"/>
+		<jflex file="scanner/${scannerName}.flex" outdir="scanner" nobak="yes"/>
 		<copy todir="scanner" file="${Java1.4Frontend}/scanner/Unicode.java" preservelastmodified="true"/>
 	</target>
 
 	<target name="parser">
 		<mkdir dir="parser"/>
 		<!-- generate the parser phase 1, create a full .lalr specification from fragments-->
-		<concat destfile="parser/JavaParser.all" binary="true" force="false">
+		<concat destfile="parser/${parserName}.all" binary="true" force="false">
 			<filelist dir="${Java1.4Frontend}">
 				<file name="parser/preamble.parser"/>
 				<file name="parser/java14.parser"/>
@@ -189,11 +195,11 @@
 		</concat>
 		<!-- generate the parser phase 2, translating .lalr to .beaver -->
 		<java classpath="${tools.dir}/JastAddParser.jar:${tools.dir}/beaver-rt.jar" classname="Main" fork="true">
-			<arg line="parser/JavaParser.all parser/JavaParser.beaver"/>
+			<arg line="parser/${parserName}.all parser/${parserName}.beaver"/>
 		</java>
 		<!-- generate the parser phase 3, translating .beaver to .java -->
-		<!-- beaver file="parser/JavaParser.beaver" terminalNames="yes" compress="no" useSwitch="yes" reportActions="yes"-->
-		<beaver file="parser/JavaParser.beaver" terminalNames="yes" compress="yes" useSwitch="yes"/>
+		<!-- beaver file="parser/${parserName}.beaver" terminalNames="yes" compress="no" useSwitch="yes" reportActions="yes"-->
+		<beaver file="parser/${parserName}.beaver" terminalNames="yes" compress="yes" useSwitch="yes"/>
 
 	</target>
 
@@ -204,6 +210,8 @@
 			<fileset dir="." includes="**/*.class"/>
 		</delete>
 		<delete file="CleanJavaChecker.jar"/>
+		<delete file="JavaPrettyPrinter.jar"/>
+		<delete file="JavaDumpTree.jar"/>
 		<delete file="cjc-src.jar"/>
 		<delete file="JastAddJ.properties"/>
 	</target>

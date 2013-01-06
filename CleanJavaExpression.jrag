@@ -23,8 +23,6 @@ aspect CleanJavaExpression {
 		s.append(" anything ");
 	}
 	
-	
-	
 	/*
 	public void ResultLiteral.toString(StringBuffer s){
 		s.append(" result ");
@@ -53,25 +51,17 @@ aspect CleanJavaExpression {
 	*/
 	
   // Type analysis
-	//TODO: need to discuss type of these expressions
+  
+	// Informal description
 	eq InformalDescription.type() = unknownType();
 	
-	//eq AnyIterator.type() = getElement().type();
-	
-  // Type check
-
-		
-	//TODO: fix type of these literals
 	// Anything literal
-	eq AnythingLiteral.isConstant() = false;
-	
 	eq AnythingLiteral.type() = unknownType();
 		
-	// Result literal
+	// Result variable
 	//eq ResultLiteral.isConstant() = false;
-	
 	//eq ResultLiteral.type() = unknownType();
 		
-	
+	//eq AnyIterator.type() = getElement().type();
 	
 }

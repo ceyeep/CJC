@@ -31,8 +31,6 @@ Access qualified_cleanjava_name =
 									return n.qualifiesAccess(i); :}
   ;
 
-
-
 ExprStmt statement_expression =
 	operate_iterator_invocation.o  {: return new ExprStmt(o); :}
   ;

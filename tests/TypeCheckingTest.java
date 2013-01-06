@@ -12,7 +12,10 @@
 package tests;
 
 import static org.junit.Assert.*;
+
 import org.junit.Test;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 
 import testFramework.TestUtilities;
 
@@ -21,13 +24,33 @@ import testFramework.TestUtilities;
  */
 public class TypeCheckingTest {
 
+	private static TestUtilities testUtilities;
+
+	/**
+	 * @throws java.lang.Exception
+	 */
+	@BeforeClass
+	public static void setUpClass() throws Exception {
+		testUtilities = new TestUtilities();
+		testUtilities.createTempDirectory();
+	}
+	
+	/**
+	 * @throws java.lang.Exception
+	 */
+	@AfterClass
+	public static void tearDownClass() throws Exception {
+		testUtilities.deleteTempDirectory();
+	}
+	
+	//Tests
     
 	/** Test simple integer assignment */
 	@Test
 	public void testTypeChecking01() {
 		String setUp = " int x; ";
 		String testCase = " //@ [ x := 3] ";
-		assertEquals("",TestUtilities.runChecker(setUp,testCase));
+		assertEquals("",testUtilities.runChecker(setUp,testCase));
 		
 	}
 	
@@ -36,7 +59,7 @@ public class TypeCheckingTest {
 	public void testTypeChecking02() {
 		String setUp = "int x;";
 		String testCase = " //@ [ this.x := 3]";
-		assertEquals("",TestUtilities.runChecker(setUp,testCase));
+		assertEquals("",testUtilities.runChecker(setUp,testCase));
 		
 	}
 	
@@ -45,7 +68,7 @@ public class TypeCheckingTest {
 	public void testTypeChecking03() {
 		String setUp = "int x;";
 		String testCase = " //@ [ y := 3]";
-		assertEquals("Semantic Error: no field named y is accessible",TestUtilities.runChecker(setUp,testCase));
+		assertEquals("Semantic Error: no field named y is accessible",testUtilities.runChecker(setUp,testCase));
 		
 	}
 	
@@ -55,7 +78,7 @@ public class TypeCheckingTest {
 		String setUp = "int x;";
 		String testCase = " //@ [ x := \"hello\"]";
 		assertEquals("Semantic Error: can not assign x of type int "
-			+"a value of type java.lang.String",TestUtilities.runChecker(setUp,testCase));
+			+"a value of type java.lang.String",testUtilities.runChecker(setUp,testCase));
 		
 	}
 	
@@ -64,7 +87,7 @@ public class TypeCheckingTest {
 	public void testTypeChecking05() {
 		String setUp = "int x, y;";
 		String testCase = " //@ [ x, y := 1,2]";
-		assertEquals("",TestUtilities.runChecker(setUp,testCase));
+		assertEquals("",testUtilities.runChecker(setUp,testCase));
 		
 	}
 	
@@ -73,7 +96,7 @@ public class TypeCheckingTest {
 	public void testTypeChecking06() {
 		String setUp = "int x, y;";
 		String testCase = "//@ [ x, y := 3]";
-		assertEquals("Semantic Error: concurrent assignment is unbalanced",TestUtilities.runChecker(setUp,testCase));
+		assertEquals("Semantic Error: concurrent assignment is unbalanced",testUtilities.runChecker(setUp,testCase));
 	}
 	
 	/** Test informal description 1 */
@@ -81,7 +104,7 @@ public class TypeCheckingTest {
 	public void testTypeChecking07() {
 		String setUp = "boolean flag;";
 		String testCase = "//@ [ flag := (* informal description *) ]";
-		assertEquals("",TestUtilities.runChecker(setUp,testCase));
+		assertEquals("",testUtilities.runChecker(setUp,testCase));
 	}
 	
 	/** Test informal description 2 (different type) */
@@ -89,7 +112,7 @@ public class TypeCheckingTest {
 	public void testTypeChecking08() {
 		String setUp = "int x;";
 		String testCase = "//@ [ x := (* informal description *) ]";
-		assertEquals("",TestUtilities.runChecker(setUp,testCase));
+		assertEquals("",testUtilities.runChecker(setUp,testCase));
 	}
 	
 	/*
@@ -115,7 +138,7 @@ public class TypeCheckingTest {
 	public void testTypeChecking11() {
 		String setUp = "int x;";
 		String testCase = "//@ [ x := \\anything ]";
-		assertEquals("",TestUtilities.runChecker(setUp,testCase));
+		assertEquals("",testUtilities.runChecker(setUp,testCase));
 	}
 	
 	/** Test "anything" literal with an object */
@@ -123,7 +146,7 @@ public class TypeCheckingTest {
 	public void testTypeChecking12() {
 		String setUp = "String s = \"\";";
 		String testCase = "//@ [ s := \\anything ]";
-		assertEquals("",TestUtilities.runChecker(setUp,testCase));
+		assertEquals("",testUtilities.runChecker(setUp,testCase));
 	}
 	
 	/** Test conditional concurrent assignments */
@@ -131,7 +154,7 @@ public class TypeCheckingTest {
 	public void testTypeChecking13() {
 		String setUp = "int x = 2;";
 		String testCase = "//@ [ x > 0 -> x := 3 ]";
-		assertEquals("",TestUtilities.runChecker(setUp,testCase));
+		assertEquals("",testUtilities.runChecker(setUp,testCase));
 	}
 	
 	/** Test conditional concurrent assignments (else statement) */
@@ -139,7 +162,7 @@ public class TypeCheckingTest {
 	public void testTypeChecking14() {
 		String setUp = "int x = 2;";
 		String testCase = "//@ [ x > 0 -> x := 3 \\else x > 10 -> x := 20 ]";
-		assertEquals("",TestUtilities.runChecker(setUp,testCase));
+		assertEquals("",testUtilities.runChecker(setUp,testCase));
 	}
 	
 	/** Test conditional concurrent assignments 
@@ -148,8 +171,6 @@ public class TypeCheckingTest {
 	public void testTypeChecking15() {
 		String setUp = "int x = 2;";
 		String testCase = "//@ [ x > 0 -> x := 3 \\else x > 10 -> x := 20 \\else \\I]";
-		assertEquals("",TestUtilities.runChecker(setUp,testCase));
+		assertEquals("",testUtilities.runChecker(setUp,testCase));
 	}
-
-
 }

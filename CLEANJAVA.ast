@@ -22,11 +22,8 @@ abstract CJStmt;
 
 CJStaticInitializer:StaticInitializer ::= Specs:AbstractConcurrentAssignment;
 CJInstanceInitializer:InstanceInitializer ::= Specs:AbstractConcurrentAssignment;
-
-//Class member declaration
-
-CJMethodDecl:MethodDecl ::= Specs:AbstractConcurrentAssignment;
 CJConstructorDecl:ConstructorDecl ::= Specs:AbstractConcurrentAssignment;
+CJMethodDecl:MethodDecl ::= Specs:AbstractConcurrentAssignment;
 
 //Statement annotation
 
@@ -42,8 +39,6 @@ abstract AbstractSimpleConcurrentAssignment:AbstractConcurrentAssignment;
 SimpleConcurrentAssignment:AbstractSimpleConcurrentAssignment ::= Dest:Expr* Source:Expr*;
 
 Identity:AbstractSimpleConcurrentAssignment ;
-
-//CondConcurrentAssignment:AbstractConcurrentAssignment ::= Condition:Expr Then:AbstractSimpleConcurrentAssignment [Else:AbstractConcurrentAssignment];
 
 CondConcurrentAssignment:AbstractConcurrentAssignment ::= Pairs:ExprAndAbstractSimpleConcurrentAssignment* [Else:AbstractSimpleConcurrentAssignment];
 

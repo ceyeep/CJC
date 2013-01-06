@@ -102,8 +102,13 @@ public class TestFile{
 	
 	//informal notation
 	//@ [x := (* maximum of x and y *) ]
-	public void informalNotation(){
+	public void informalNotation01(){
 		max = Math.max(x, y);
+	}
+	
+	//@ [x := (* maximum of x and y *) + 10 ]
+	public void informalNotation02(){
+		max = Math.max(x, y) + 10;
 	}
 	
 	//(MISSING TEST) \result - type checking

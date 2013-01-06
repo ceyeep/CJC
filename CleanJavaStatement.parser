@@ -5,10 +5,9 @@ AbstractConcurrentAssignment abstract_concurrent_assignment =
   
 AbstractSimpleConcurrentAssignment abstract_simple_concurrent_assignment = 
 	simple_concurrent_assignment.a		{: return a; :}
-	identity.i  					 	{: return i; :}
+  |	identity.i  					 	{: return i; :}
   ;
-  
-  
+
 SimpleConcurrentAssignment simple_concurrent_assignment =
 	postfix_expression_list.dest CLEANEQ assignment_expression_list.source {: return new SimpleConcurrentAssignment(dest,source); :}
   ;
@@ -48,6 +47,4 @@ List concurrent_assignment_expr_list =
 	concurrent_assignment_expr.e				{: return new List().add(e); :}
   |	concurrent_assignment_expr_list.l ELLIPSIS concurrent_assignment_expr.e {: return l.add(e); :}
   ;
- 
-
 */

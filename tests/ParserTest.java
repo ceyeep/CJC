@@ -13,21 +13,15 @@ package tests;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 
-import cleanJavaTools.JavaChecker;
-
-import AST.BytecodeParser;
-import AST.CompilationUnit;
-import AST.JavaParser;
-import AST.Problem;
 import beaver.Parser;
 
-import java.io.*;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.Iterator;
-import java.util.ArrayList;
-import java.lang.StringBuffer;
+import java.io.StringReader;
+import java.io.Reader;
+import java.io.BufferedReader;
+import java.io.IOException;
 
 import testFramework.TestUtilities;
 
@@ -35,8 +29,27 @@ import testFramework.TestUtilities;
  *  @author ceyeep
  */
 public class ParserTest {
+
+	private static TestUtilities testUtilities;
+
+	/**
+	 * @throws java.lang.Exception
+	 */
+	@BeforeClass
+	public static void setUpClass() throws Exception {
+		testUtilities = new TestUtilities();
+		testUtilities.createTempDirectory();
+	}
+	
+	/**
+	 * @throws java.lang.Exception
+	 */
+	@AfterClass
+	public static void tearDownClass() throws Exception {
+		testUtilities.deleteTempDirectory();
+	}
  
-	//TEST PARSER
+	//tests
  
 	/** Test using this keyword */
 	@Test
@@ -207,7 +220,7 @@ public class ParserTest {
 		String testCase = "//@[x := x = 2]";
 		String errorMessage = "Lexical Error: illegal character \"=\"\n"+
 						"Syntactic Error: unexpected token \"2\"";
-		assertEquals(errorMessage,TestUtilities.runChecker(setUp,testCase));
+		assertEquals(errorMessage,testUtilities.runChecker(setUp,testCase));
 	}
 	
 	/** Test right-side side-effects (+=) */
@@ -216,7 +229,7 @@ public class ParserTest {
 		String setUp = " int x; ";
 		String testCase = "//@[x := x += 2]";
 		String errorMessage = "Lexical Error: illegal character \"=\"";
-		assertEquals(errorMessage,TestUtilities.runChecker(setUp,testCase));
+		assertEquals(errorMessage,testUtilities.runChecker(setUp,testCase));
 	}
 		
 	//Utility methods
@@ -225,13 +238,8 @@ public class ParserTest {
 	protected static void assertParseOk(String intendedFunction) {
 		try {
 			parse(createStub(intendedFunction));
-		}
-		catch(Parser.Exception e) {
+		} catch(Parser.Exception e) {
 			System.out.println("Parser error");
-			fail(e.getMessage());
-		}
-		catch (Throwable e) {
-			System.out.println("Other error");
 			fail(e.getMessage());
 		}
 	}
@@ -241,13 +249,8 @@ public class ParserTest {
 	protected static void assertParseOk(String intendedFunction, String code) {
 		try {
 			parse(createStub(intendedFunction, code));
-		}
-		catch(Parser.Exception e) {
+		} catch(Parser.Exception e) {
 			System.out.println("Parser error");
-			fail(e.getMessage());
-		}
-		catch (Throwable e) {
-			System.out.println("Other error");
 			fail(e.getMessage());
 		}
 	}
@@ -256,13 +259,8 @@ public class ParserTest {
 	protected static void assertParseError(String intendedFunction) {
 		try {
 			parse(createStub(intendedFunction));
-		} 
-		catch(Parser.Exception e) {
+		} catch(Parser.Exception e) {
 			return;
-		}
-		catch (Throwable e) {
-			System.out.println("Other error");
-			fail(e.getMessage());	
 		}
 		fail("Expected to find parse error in " + intendedFunction);
 	}
@@ -272,17 +270,11 @@ public class ParserTest {
 	protected static void assertParseError(String intendedFunction, String code) {
 		try {
 			parse(createStub(intendedFunction, code));
-		} 
-		catch(Parser.Exception e) {
+		} catch(Parser.Exception e) {
 			return;
-		}
-		catch (Throwable e) {
-			System.out.println("Other error");
-			fail(e.getMessage());	
 		}
 		fail("Expected to find parse error in " + intendedFunction+"\n"+code);
 	}
-	
 	
 	/* Creates a method stub for the given testcase. */
 	protected static String createStub(String testCase)
@@ -304,14 +296,12 @@ public class ParserTest {
 	}
 	
 	/* Creates a new Scanner and Parser and parses the given testcase. */
-	protected static void parse(String s) throws Throwable, beaver.Parser.Exception{
-		parser.JavaParser parser = new parser.JavaParser();
-		Reader reader = new StringReader(s);
-
-		scanner.JavaScanner scanner = new scanner.JavaScanner(new BufferedReader(reader));
-		parser.parse(scanner);
-		reader.close();
+	protected static void parse(String s) throws beaver.Parser.Exception{
+		try(Reader reader = new StringReader(s)){
+			scanner.JavaScanner scanner = new scanner.JavaScanner(new BufferedReader(reader));
+			new parser.JavaParser().parse(scanner);
+		}catch (IOException e) {
+			fail(e.getMessage());	
+		}
 	}
-
-	
 }
