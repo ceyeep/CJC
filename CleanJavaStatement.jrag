@@ -12,9 +12,9 @@
 aspect CleanJavaStatement {
 
   // helper attribute to find the containing CJMethodDecl
-	syn BodyDecl ASTNode.containingCJMethodDecl() = getParent() != null ? getParent().containingCJMethodDecl() : null;
-	syn BodyDecl CJMethodDecl.containingCJMethodDecl() = this;
-	syn BodyDecl CJConstructorDecl.containingCJMethodDecl() = this;
+	syn CJMethodDecl ASTNode.containingCJMethodDecl() = getParent() != null ? getParent().containingCJMethodDecl() : null;
+	syn CJMethodDecl CJMethodDecl.containingCJMethodDecl() = this;
+	//syn CJConstructorDecl CJConstructorDecl.containingCJMethodDecl() = this;
 	
 	
 	eq CJMethodDecl.getSpecs().lookupVariable(String name) {
@@ -99,6 +99,7 @@ aspect CleanJavaStatement {
 						" a value of type " + getSource(i).type().typeName());
 				//variablesList.add(getDest(i).varDecl().name());
 				//System.out.println(getDest(i).varDecl().name());
+				//System.out.println(getDest(i).type());
 			}
 
 			//Check if there are any duplicates in the left side of the intended function
