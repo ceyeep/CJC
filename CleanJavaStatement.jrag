@@ -16,7 +16,6 @@ aspect CleanJavaStatement {
 	syn CJMethodDecl CJMethodDecl.containingCJMethodDecl() = this;
 	//syn CJConstructorDecl CJConstructorDecl.containingCJMethodDecl() = this;
 	
-	
 	eq CJMethodDecl.getSpecs().lookupVariable(String name) {
 		SimpleSet set = parameterDeclaration(name);
 		if (!set.isEmpty()) return set;
@@ -85,73 +84,57 @@ aspect CleanJavaStatement {
 		
 	public void SimpleConcurrentAssignment.typeCheck() {
 		//Check if equation is balanced
-		if(getNumDest() != getNumSource())
-		{
+		if(getNumDest() != getNumSource()) {
 			error("concurrent assignment is unbalanced");
 		}
 		else{
-			//java.util.List<String> variablesList = new ArrayList<String>();
+			ArrayList<String> variables = new ArrayList<String>();
+			ArrayList<String> duplicates = new ArrayList<String>();
 			for(int i = 0; i < getNumDest(); i++) {
-				if(!getDest(i).isVariable())
-					error(getDest(i)+" is not a variable");
-				else if(!getSource(i).type().assignConversionTo(getDest(i).type(), getSource(i)) && !getSource(i).type().isUnknown())
-					error("can not assign " + getDest(i) + " of type " + getDest(i).type().typeName() +
+				Expr dest = getDest(i);
+				if(!dest.isVariable() && !dest.isCJResult())
+					error(dest+" is not a variable or \\result");
+				else if(!getSource(i).type().assignConversionTo(dest.type(), getSource(i)) && !getSource(i).type().isUnknown())
+					error("cannot assign " + dest + " of type " + dest.type().typeName() +
 						" a value of type " + getSource(i).type().typeName());
-				//variablesList.add(getDest(i).varDecl().name());
-				//System.out.println(getDest(i).varDecl().name());
-				//System.out.println(getDest(i).type());
+
+				//If node is not a CJResult get var decl name
+				if(dest.isVariable()){
+					String name = dest.varDecl().name();
+					if(!variables.contains(name))
+						variables.add(name);
+					else
+						if(!duplicates.contains(name))
+							duplicates.add(name);
+				}
+				else if(dest.isCJResult()){
+					if(!variables.contains("\\result"))
+						variables.add("\\result");
+					else
+						if(!duplicates.contains("\\result"))
+							duplicates.add("\\result");
+				}
 			}
 
-			//Check if there are any duplicates in the left side of the intended function
-			
-			//Set<String> set = new HashSet<String>(variablesList);
-			//if(set.size() < getNumDest())
-			//	error("there are duplicates in the left-hand side of the equation: " + getVariableDuplicates());
+			//Print duplicates and throw error
+
+			if(duplicates.size() > 0)
+				error("there are duplicates in the left-hand side of the equation: " + getVariableDuplicates(duplicates));
 			
 		}
 	}
-	
-	/*
-	public void SimpleConcurrentAssignment.typeCheck(){
-	    if(!getDest().isVariable())
-			error("left hand side is not a variable");
-		else {
-			TypeDecl source = sourceType();
-			TypeDecl dest = getDest().type();
-			if(getSource().type().isPrimitive() && getDest().type().isPrimitive())
-				return;
-			error("can not assign " + getDest() + " of type " + getDest().type().typeName() +
-				" a value of type " + sourceType().typeName());
-		}
-	}*/
-	
-	//syn TypeDecl SimpleConcurrentAssignment.sourceType() = getSource().type();
-	
-	/*
-	public String SimpleConcurrentAssignExpr.getVariableDuplicates()
-	{
-		ArrayList<String> duplicates = new ArrayList<String>();
-		ArrayList<String> temp = new ArrayList<String>();
-		String duplicateString = "";
-		for(Expr expression: getDests()) {
-				if(expression.isVariable())
-				{
-					String varName = expression.varDecl().name();
-					if(temp.contains(varName))
-					{
-						if(!duplicates.contains(varName))
-						{
-							duplicates.add(varName);
-							duplicateString += varName + " ";
-						}
-					}
-					else
-						temp.add(varName);
-				}
-		}
-		return duplicateString.trim();
-	}
-	*/
 		
 	
+	public String SimpleConcurrentAssignment.getVariableDuplicates(ArrayList<String> list)
+	{
+		String duplicates = "";
+		Iterator it = list.iterator();
+		while(it.hasNext()){
+			duplicates += it.next();
+			if(it.hasNext())
+				duplicates += ", ";
+		}
+		return duplicates;
+	}
+		
 }

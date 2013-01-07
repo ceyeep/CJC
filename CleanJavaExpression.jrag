@@ -25,7 +25,7 @@ aspect CleanJavaExpression {
 	
 	
 	public void CJResult.toString(StringBuffer s){
-		s.append(" result "+type());
+		s.append(" \\result ");
 	}
 	
 	
@@ -59,7 +59,9 @@ aspect CleanJavaExpression {
 		
 	// Result variable
 	eq CJResult.type() = containingCJMethodDecl().getTypeAccess().type(); 
-	eq CJResult.isVariable() = true;
+
+	syn boolean Expr.isCJResult() = false;
+	eq CJResult.isCJResult() = true;
 
 		
 	//eq AnyIterator.type() = getElement().type();

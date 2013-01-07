@@ -77,7 +77,7 @@ public class TypeCheckingTest {
 	public void testTypeChecking04() {
 		String setUp = "int x;";
 		String testCase = " //@ [ x := \"hello\"]";
-		assertEquals("Semantic Error: can not assign x of type int "
+		assertEquals("Semantic Error: cannot assign x of type int "
 			+"a value of type java.lang.String",testUtilities.runChecker(setUp,testCase));
 		
 	}
@@ -115,23 +115,22 @@ public class TypeCheckingTest {
 		assertEquals("",testUtilities.runChecker(setUp,testCase));
 	}
 	
-	/*
-	// Test concurrent assignment variable duplicate
+	
+	/** Test variable duplicate. */
 	public void testTypeChecking09() {
 		String setUp = "int x;";
-		String testCase = "//# [ x, x := 2, 3 ]";
-		assertEquals("Semantic Error: there are duplicates in the left-hand side of the equation: x"
-			,runChecker(setUp,testCase));
+		String testCase = "//@ [ x, x := 2, 3 ]";
+		assertEquals("Semantic Error: there are duplicates in the left-hand side of the equation: x",
+			testUtilities.runChecker(setUp,testCase));
 	}
 	
-	// Test triple concurrent assignment with duplicate
+	/** Test multiple duplicates. */
 	public void testTypeChecking10() {
-		String setUp = "int x;";
-		String testCase = "//# [ x, x, x := 2, 3, 5 ]";
-		assertEquals("Semantic Error: there are duplicates in the left-hand side of the equation: x"
-			,runChecker(setUp,testCase));
+		String setUp = "String s1, s2;";
+		String testCase = "//# [ this.s1, s1, this.s2, s2 := \"s\", \"s\", \"s\", \"s\" ]";
+		assertEquals("Semantic Error: there are duplicates in the left-hand side of the equation: s1, s2",
+			testUtilities.runChecker(setUp,testCase));
 	}
-	*/
 	
 	/** Test "anything" literal. */
 	@Test
@@ -180,5 +179,14 @@ public class TypeCheckingTest {
 		String testCase = "//@ [ \\result := 5 ]";
 		String code = "public int foo1(){return 5;}";
 		assertEquals("",testUtilities.runChecker(testCase,code));
+	}
+	
+	/** Test a method with a double \\result variable . */
+	@Test
+	public void testTypeChecking17() {
+		String testCase = "//@ [ \\result, \\result := 5, 4 ]";
+		String code = "public int foo1(){return 5;}";
+		assertEquals("Semantic Error: there are duplicates in the left-hand side of the equation: \\result",
+			testUtilities.runChecker(testCase,code));
 	}
 }
