@@ -190,9 +190,10 @@
   "..."                          { return sym(Terminals.ELLIPSIS); }
 
   // CLEANJAVA Operators
-  ":="							{ return sym(Terminals.CLEANEQ); }
+  ":="							{ return sym(Terminals.CJEQ); }
+  "@="							{ return sym(Terminals.CJREFEQ); }
   "->"							{ return sym(Terminals.THEN); }
-  "\\else"						{ return sym(Terminals.CLEANELSE); }
+  "\\else"						{ return sym(Terminals.CJELSE); }
   "=>"							{ return sym(Terminals.ITERATOR); }
   "\\cj"						{ return sym(Terminals.CJVAR); }
   

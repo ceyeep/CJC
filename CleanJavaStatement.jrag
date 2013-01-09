@@ -35,6 +35,7 @@ aspect CleanJavaStatement {
   // Pretty printer
 	
 	syn String SimpleConcurrentAssignment.printOp() = " := ";
+	syn String SimpleConcurrentAssignmentByRef.printOp() = " @= ";
 		
 	public void SimpleConcurrentAssignment.toString(StringBuffer s) {
 		if(getNumDest() > 0) {
@@ -53,7 +54,6 @@ aspect CleanJavaStatement {
 			}
 		}
 	}
-	
 	
 	public void CondConcurrentAssignment.toString(StringBuffer s) {
 		if(getNumPairs() > 0) {
@@ -81,7 +81,8 @@ aspect CleanJavaStatement {
 	
 		
   // Type check
-		
+	
+	/** Perform type checking in a simple concurrent assignemtn. */
 	public void SimpleConcurrentAssignment.typeCheck() {
 		//Check if equation is balanced
 		if(getNumDest() != getNumSource()) {
@@ -92,12 +93,11 @@ aspect CleanJavaStatement {
 			ArrayList<String> duplicates = new ArrayList<String>();
 			for(int i = 0; i < getNumDest(); i++) {
 				Expr dest = getDest(i);
-				if(!dest.isVariable() && !dest.isCJResult())
-					error(dest+" is not a variable or \\result");
-				else if(!getSource(i).type().assignConversionTo(dest.type(), getSource(i)) && !getSource(i).type().isUnknown())
-					error("cannot assign " + dest + " of type " + dest.type().typeName() +
-						" a value of type " + getSource(i).type().typeName());
-
+				Expr source = getSource(i);
+				
+				//Check assignment compatiblity
+				checkAssignmentCompatiblity(dest,source);
+				
 				//If node is not a CJResult get var decl name
 				if(dest.isVariable()){
 					String name = dest.varDecl().name();
@@ -116,15 +116,39 @@ aspect CleanJavaStatement {
 				}
 			}
 
-			//Print duplicates and throw error
-
+			//Check if there are name duplicates
 			if(duplicates.size() > 0)
 				error("there are duplicates in the left-hand side of the equation: " + getVariableDuplicates(duplicates));
 			
 		}
 	}
-		
 	
+	/** Check assignment compatiblity for simple concurrent assignments. */
+	public void SimpleConcurrentAssignment.checkAssignmentCompatiblity(Expr dest, Expr source){
+		if(!dest.isVariable() && !dest.isCJResult())
+			error(dest+" is not a variable");
+		else if(!source.type().assignConversionTo(dest.type(), source) && !source.type().isUnknown())
+			error("cannot assign " + dest + " of type " + dest.type().typeName() +
+				" a value of type " + source.type().typeName());
+		else if(dest.isCJResult() && containingCJMethodDecl() == null)
+			error("incorrect use of \\result, \\result must be used within a method declaration");
+	}
+	
+	/** Check assignment compatiblity for simple concurrent assignments by reference. */
+	public void SimpleConcurrentAssignmentByRef.checkAssignmentCompatiblity(Expr dest, Expr source){
+		if(!dest.isVariable() && !dest.isCJResult())
+			error(dest+" is not a variable");
+		else if(dest.type().isPrimitive())
+			error("cannot use " + dest + " of primitive "+dest.type()+" type using referential semantics"); 
+		else if(!source.type().assignConversionTo(dest.type(), source) && !source.type().isUnknown())
+			error("cannot assign " + dest + " of type " + dest.type().typeName() +
+				" a value of type " + source.type().typeName());
+		else if(dest.isCJResult() && containingCJMethodDecl() == null)
+			error("incorrect use of \\result, \\result must be used within a method declaration");
+			
+	}
+		
+	/** Get variable duplicate names in a simple concurrent assignemtn. */
 	public String SimpleConcurrentAssignment.getVariableDuplicates(ArrayList<String> list)
 	{
 		String duplicates = "";

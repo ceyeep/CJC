@@ -58,7 +58,7 @@ aspect CleanJavaExpression {
 	eq AnythingLiteral.type() = unknownType();
 		
 	// Result variable
-	eq CJResult.type() = containingCJMethodDecl().getTypeAccess().type(); 
+	eq CJResult.type() = containingCJMethodDecl() != null ? containingCJMethodDecl().getTypeAccess().type() : unknownType();
 
 	syn boolean Expr.isCJResult() = false;
 	eq CJResult.isCJResult() = true;

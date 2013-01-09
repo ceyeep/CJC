@@ -38,6 +38,8 @@ abstract AbstractSimpleConcurrentAssignment:AbstractConcurrentAssignment;
 //Should be 1..n
 SimpleConcurrentAssignment:AbstractSimpleConcurrentAssignment ::= Dest:Expr* Source:Expr*;
 
+SimpleConcurrentAssignmentByRef:SimpleConcurrentAssignment;
+
 Identity:AbstractSimpleConcurrentAssignment ;
 
 CondConcurrentAssignment:AbstractConcurrentAssignment ::= Pairs:ExprAndAbstractSimpleConcurrentAssignment* [Else:AbstractSimpleConcurrentAssignment];

@@ -25,13 +25,14 @@ import testFramework.TestUtilities;
 public class TypeCheckingTest {
 
 	private static TestUtilities testUtilities;
+	private static String fileName  = "TempTestFile";
 
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@BeforeClass
 	public static void setUpClass() throws Exception {
-		testUtilities = new TestUtilities();
+		testUtilities = new TestUtilities(fileName);
 		testUtilities.createTempDirectory();
 	}
 	
@@ -188,5 +189,37 @@ public class TypeCheckingTest {
 		String code = "public int foo1(){return 5;}";
 		assertEquals("Semantic Error: there are duplicates in the left-hand side of the equation: \\result",
 			testUtilities.runChecker(testCase,code));
+	}
+	
+	/** Test \\result variable with an invalid type. */
+	@Test
+	public void testTypeChecking18() {
+		String testCase = "//@ [ \\result := 5 ]";
+		String code = "public String foo1(){return \"hello\";}";
+		assertEquals("Semantic Error: cannot assign \\result of type java.lang.String a value of type int",testUtilities.runChecker(testCase,code));
+	}
+	
+	/** Test \\result variable in a constructor. */
+	@Test
+	public void testTypeChecking19() {
+		String testCase = "//@ [ \\result := 5 ]";
+		String code = "public " +fileName+ " (){}";
+		assertEquals("Semantic Error: incorrect use of \\result, \\result must be used within a method declaration",testUtilities.runChecker(testCase,code));
+	}
+	
+	/** Test concurrent assignment with referential semantics. */
+	@Test
+	public void testTypeChecking22() {
+		String setUp = "Object o1 = new Object(), o2 = new Object();";
+		String testCase = "//@ [ o1 @= 02 ]";
+		assertEquals("",testUtilities.runChecker(setUp,testCase));
+	}
+	
+	/** Test incorrect use of simple concurrent assignment with referential semantics. */
+	@Test
+	public void testTypeChecking21() {
+		String setUp = "int x = 2;";
+		String testCase = "//@ [ x @= 3 ]";
+		assertEquals("Semantic Error: cannot use x of primitive int type using referential semantics",testUtilities.runChecker(setUp,testCase));
 	}
 }

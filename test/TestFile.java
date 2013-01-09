@@ -27,6 +27,7 @@ public class TestFile{
 	private static boolean flag;
 	@SuppressWarnings("unused")
 	private int x = 0, y = 0, z = 0, sum = 0, max = 0;
+	private Object o1 = new Object(), o2 = new Object();
 	
 	//Class body declarations (entry CJ annotation point)
 	
@@ -135,7 +136,17 @@ public class TestFile{
 		z = 3;
 	}
 	
-	//(MISSING TEST)Object equality := vs &=
+	//Value semantics
+	//@ [ o1 := o2 ]
+	public void valueSemantics(){
+		o1 = o2;
+	}
+	
+	//Referential semantics
+	//@ [ o1 @= o2 ]
+	public void referentialSemantics(){
+		// o1 = o2.clone(); with a clone() implementation
+	}
 	
 	//Conditional concurrent assignment
 	/*@ 

@@ -10,7 +10,8 @@ AbstractSimpleConcurrentAssignment abstract_simple_concurrent_assignment =
   ;
 
 SimpleConcurrentAssignment simple_concurrent_assignment =
-	postfix_expression_list.dest CLEANEQ assignment_expression_list.source {: return new SimpleConcurrentAssignment(dest,source); :}
+	postfix_expression_list.dest CJEQ assignment_expression_list.source {: return new SimpleConcurrentAssignment(dest,source); :}
+	postfix_expression_list.dest CJREFEQ assignment_expression_list.source {: return new SimpleConcurrentAssignmentByRef(dest,source); :}
   ;
 
 List postfix_expression_list =
@@ -25,12 +26,12 @@ List assignment_expression_list =
 
 CondConcurrentAssignment conditional_concurrent_assignment =
 	conditional_assignment_list.l {: return new CondConcurrentAssignment(l,  new Opt()); :}
-  |	conditional_assignment_list.l CLEANELSE  abstract_simple_concurrent_assignment.els {: return new CondConcurrentAssignment(l, new Opt(els)); :} 
+  |	conditional_assignment_list.l CJELSE  abstract_simple_concurrent_assignment.els {: return new CondConcurrentAssignment(l, new Opt(els)); :} 
   ;
 
 List conditional_assignment_list =
     expression_and_abstract_simple_concurrent_assignment.e     {: return new List().add(e); :}
-  |	conditional_assignment_list.l CLEANELSE expression_and_abstract_simple_concurrent_assignment.e {: return l.add(e); :}
+  |	conditional_assignment_list.l CJELSE expression_and_abstract_simple_concurrent_assignment.e {: return l.add(e); :}
   ;  
   
 ExprAndAbstractSimpleConcurrentAssignment  expression_and_abstract_simple_concurrent_assignment =
