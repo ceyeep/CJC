@@ -12,65 +12,33 @@ package cleanJavaTools;
 import AST.*;
 import java.io.*;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-/**
- * Java pretty printer.
- * Parses and then pretty prints a Java program.
- */
 class JavaPrettyPrinter extends Frontend {
 	public static void main(String args[]) {
-		if(!compile(args))
-			System.exit(1);
+	if(!compile(args))
+		System.exit(1);
 	}
 
 	public static boolean compile(String args[]) {
 		return new JavaPrettyPrinter().process(
-				args,
-				new BytecodeParser(),
-				new JavaParser() {
-					public CompilationUnit parse(java.io.InputStream is, String fileName)
-						throws java.io.IOException, beaver.Parser.Exception {
-							return new parser.JavaParser().parse(is, fileName);
-					}
+			args,
+			new BytecodeParser(),
+			new JavaParser() {
+				public CompilationUnit parse(java.io.InputStream is, String fileName) throws java.io.IOException, beaver.Parser.Exception {
+					return new parser.JavaParser().parse(is, fileName);
 				}
-				);
+			}
+		);
 	}
-	protected void processErrors(java.util.Collection errors,
-			CompilationUnit unit) {
+  
+	protected void processErrors(java.util.Collection errors, CompilationUnit unit) {
 		super.processErrors(errors, unit);
+		System.out.println(unit.toString());
+		System.out.println(unit.dumpTreeNoRewrite());
 	}
-
+  
 	protected void processNoErrors(CompilationUnit unit) {
-		String separator = System.getProperty("file.separator");
-		if (separator == "\\")
-			// regex escape
-			separator = "\\\\";
-		String fnIn = unit.pathName();
-		Pattern srcPattern = Pattern.compile(
-				"^(.*"+separator+
-				")?([^"+separator+
-				"]+)\\.java$");
-		Matcher matcher = srcPattern.matcher(fnIn);
-		if (!matcher.find())
-			throw new Error("Coult not determine output filename "+
-					"for source file "+fnIn);
-		String fnOut = "";
-		if (program.options().hasOption("-d"))
-			fnOut = program.options().getValueForOption("-d") +
-				System.getProperty("file.separator");
-		fnOut += matcher.group(2)+".txt";
-
-		try {
-			FileOutputStream fout = new FileOutputStream(
-					new File(fnOut));
-			PrintStream out = new PrintStream(fout);
-			out.println(unit.toString());
-			fout.close();
-		} catch (IOException e) {
-			System.err.println("Could not write output to "+fnOut);
-		}
+		System.out.println(unit.toString());
 	}
 
 	protected ResourceBundle resources = null;
