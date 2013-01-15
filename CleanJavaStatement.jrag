@@ -22,7 +22,6 @@ aspect CleanJavaStatement {
 		// Delegate to other declarations in scope
 		return lookupVariable(name);
 	}
-	
 
   // Unreachable Statements (see UnreachableStatements.jrag)
 
@@ -78,11 +77,10 @@ aspect CleanJavaStatement {
 	public void Identity.toString(StringBuffer s){
 		s.append(" I ");
 	}
-	
 		
   // Type check
 	
-	/** Perform type checking in a simple concurrent assignemtn. */
+	/** Perform type checking in a simple concurrent assignment. */
 	public void SimpleConcurrentAssignment.typeCheck() {
 		//Check if equation is balanced
 		if(getNumDest() != getNumSource()) {
@@ -119,7 +117,6 @@ aspect CleanJavaStatement {
 			//Check if there are name duplicates
 			if(duplicates.size() > 0)
 				error("there are duplicates in the left-hand side of the equation: " + getVariableDuplicates(duplicates));
-			
 		}
 	}
 	
@@ -145,7 +142,6 @@ aspect CleanJavaStatement {
 				" a value of type " + source.type().typeName());
 		else if(dest.isCJResult() && containingCJMethodDecl() == null)
 			error("incorrect use of \\result, \\result must be used within a method declaration");
-			
 	}
 		
 	/** Get variable duplicate names in a simple concurrent assignemtn. */
@@ -160,5 +156,4 @@ aspect CleanJavaStatement {
 		}
 		return duplicates;
 	}
-		
 }

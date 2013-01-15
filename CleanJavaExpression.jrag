@@ -32,23 +32,7 @@ aspect CleanJavaExpression {
 	public void InformalDescription.toString(StringBuffer s){
 		s.append("(* " + getDescription() + " *)");
 	}
-	
-	/*
-	public void AnyIterator.toString(StringBuffer s){
-		getIterable().toString(s);
-		s.append(" -> ");
-		s.append(" any(");
-		getElement().getModifiers().toString(s);
-		getElement().getTypeAccess().toString(s);
-		s.append(" " + getElement().name());
-		s.append("; ");
-		getB1().toString(s);
-		s.append("; ");
-		getB2().toString(s);
-		s.append(")");
-	}
-	*/
-	
+		
   // Type analysis
   
 	// Informal description
@@ -63,7 +47,4 @@ aspect CleanJavaExpression {
 	syn boolean Expr.isCJResult() = false;
 	eq CJResult.isCJResult() = true;
 
-		
-	//eq AnyIterator.type() = getElement().type();
-	
 }

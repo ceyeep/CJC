@@ -1,5 +1,35 @@
-/*
-Expr expression =
-	ANY_ITERATOR LPAREN type.t variable_declarator.d RPAREN {: return new AnyIterator(t,d); :}
+// Iterators
+
+Expr primary_no_new_array =
+	iterate_operator_invocation.o  {: return o; :}
   ;
-*/
+
+Access iterate_operator_invocation =
+		primary.p ITERATORACCESS ITERATEOP LPAREN cj_variable_declarator.i COMMA 
+		cj_variable_declarator_with_initializer.a SEMICOLON iterate_operator_boolean_expression.b? expression.e RPAREN 
+		{: return new IterateOperator(p, ITERATEOP, i, a, b, e);  :}
+	|	name.n ITERATORACCESS ITERATEOP LPAREN cj_variable_declarator.i COMMA
+		cj_variable_declarator_with_initializer.a SEMICOLON iterate_operator_boolean_expression.b? expression.e RPAREN 
+		{: return new IterateOperator(n, ITERATEOP, i, a, b, e);  :}
+		
+	//TODO: check complete implementation of method_invoctation in GenericMethods.parser in JastAddJ 5
+	;
+  
+Opt iterate_operator_boolean_expression =
+	expression.e SEMICOLON                       {: return new Opt(e); :}
+  ;  
+  
+//CJ Variable Decl
+
+
+CJVariableDecl cj_variable_declarator =
+    cj_variable_declarator_id.v                           {: return v; :}
+  ;
+  
+CJVariableDecl cj_variable_declarator_with_initializer =
+    cj_variable_declarator_id.v ITEQ variable_initializer.i {: v.setInit(i); return v; :}
+  ;   
+   
+CJVariableDecl cj_variable_declarator_id = 
+	type.t IDENTIFIER dims.d?                       {: return new CJVariableDecl(IDENTIFIER, d, new Opt(), t); :}
+  ;   

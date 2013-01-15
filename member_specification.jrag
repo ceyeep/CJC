@@ -12,44 +12,44 @@
 aspect CleanJavaMemberSpecs {
 
 	// pretty printing
-	
+	//TODO: create symbol elements
 	public void CJStaticInitializer.toString(StringBuffer s) {
 		singleLine(s);
-		s.append("/* @[ ");
+		s.append("/*@ [ ");
 		getSpecs().toString(s);
-		s.append(" ] */");
+		s.append(" ] @*/");
 		super.toString(s);
 	}
 
 	public void CJInstanceInitializer.toString(StringBuffer s) {
 		singleLine(s);
-		s.append("/* @[ ");
+		s.append("/*@ [ ");
 		getSpecs().toString(s);
-		s.append(" ] */");
+		s.append(" ] @*/");
 		super.toString(s);
 	}
 
 	public void CJConstructorDecl.toString(StringBuffer s) {
 		singleLine(s);
-		s.append("/* @[ ");
+		s.append("/*@ [ ");
 		getSpecs().toString(s);
-		s.append(" ] */");
+		s.append(" ] @*/");
 		super.toString(s);
 	}
 	
 	public void CJMethodDecl.toString(StringBuffer s){
 		singleLine(s);
-		s.append("/* @[ ");
+		s.append("/*@ [ ");
 		getSpecs().toString(s);
-		s.append(" ] */");
+		s.append(" ] @*/");
 		super.toString(s);
 	}
 	
 	public void CJBlock.toString(StringBuffer s){
 		singleLine(s);
-		s.append("/* @[ ");
+		s.append("/*@ [ ");
 		getSpecs().toString(s);
-		s.append(" ] */");
+		s.append(" ] @*/");
 		super.toString(s);
 	}
   

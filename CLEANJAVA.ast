@@ -59,9 +59,8 @@ AnythingLiteral:Literal ;
 
 
 //Iterator operators
-//JVariableDecl:VariableDecl;
 
-IterateOperator:MethodAccess ::= Element:CJVariableDecl*;
+IterateOperator:Access ::= Caller:Expr <Operator:String> Iterator:CJVariableDecl Accumulator:CJVariableDecl [Bool:Expr] Arg:Expr;
 
 CJVariableDecl:VariableDecl ::= TypeAccess:Access;
 

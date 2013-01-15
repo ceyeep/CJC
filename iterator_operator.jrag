@@ -16,17 +16,77 @@ import java.util.ArrayList;
 aspect IteratorOperator {
 
   //Pretty printer
-
-	/*
-	public void AnyIterator.toString(StringBuffer s) {
-		s.append(" any iterator ");
+	//Attribute representing the first boolean expression of the iterate operator
+	syn Expr IterateOperator.boolExp() =  !hasBool() ? new BooleanLiteral(true) : getBool();
+  
+	syn String IterateOperator.printOp() = "=>";
+  
+	public void IterateOperator.toString(StringBuffer s){
+		getCaller().toString(s);
+		s.append(printOp());
+		if(getOperator().startsWith("\\"))
+			s.append(getOperator().substring(1));
+		else
+			s.append(getOperator());
+		s.append("( " + getIterator() + ", "+ getAccumulator() + "; "+ boolExp() + ", " + getArg() + " )");
 	}
-	*/
 	
+	public void CJVariableDecl.toString(StringBuffer s){
+		getTypeAccess().toString(s);
+		s.append(" " + name());
+		if(getNumDims() > 0) {
+			getDims(0).toString(s);
+			for(int i = 1; i < getNumDims(); i++) {
+				getDims(i).toString(s);
+			}
+		}
+		if(hasInit()) {
+			s.append(" = ");
+			getInit().toString(s);
+		}
+	}
+
+  //Lookup variable
+  /*
+	//CJVariableDecl
+	inh SimpleSet CJVariableDecl.lookupVariable(String name);
+	syn boolean CJVariableDecl.declaresVariable(String name) = name().equals(name);
+	
+	//Iterate operator
+	inh lazy SimpleSet IterateOperator.lookupVariable(String name);
+	
+	eq IterateOperator.getIterator().lookupVariable(String name) = localLookup(name);
+	eq IterateOperator.getAccumulator().lookupVariable(String name) = localLookup(name);
+	eq IterateOperator.getBool().lookupVariable(String name) = localLookup(name);
+	eq IterateOperator.getArg().lookupVariable(String name) = localLookup(name);
+	syn lazy SimpleSet IterateOperator.localLookup(String name) {
+		CJVariableDecl v = localVariableDeclaration(name);
+		if(v != null) 
+			return v;
+		return lookupVariable(name);
+	}
+	
+	syn lazy CJVariableDecl IterateOperator.localVariableDeclaration(String name) {
+		if(getIterator().declaresVariable(name))
+			return (CJVariableDecl)getIterator();
+		if(getAccumulator().declaresVariable(name))
+			return (CJVariableDecl)getAccumulator();
+		return null;
+	}
+  
+	IterateOperator implements VariableScope;
+	*/
   //Type analysis
   
-	//eq AnyIterator.type() = typeBoolean();
+	eq IterateOperator.type() = getAccumulator().getTypeAccess().type();
 	
   //Type checking
-
+  
+	public void IterateOperator.typeCheck() {
+		//Check if E2 type is equal to T2
+		if(!getArg().type().assignConversionTo(getAccumulator().getTypeAccess().type(), getArg()) )
+			error("E2 expression in " + getOperator() + " operator must be of type " +
+				getAccumulator().getTypeAccess().type().typeName());
+	}
+	
 }

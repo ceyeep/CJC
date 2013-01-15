@@ -226,8 +226,7 @@ public class ParserTest {
 	public void testParserFail05() {
 		String setUp = " int x; ";
 		String testCase = "//@[x := x = 2]";
-		String errorMessage = "Lexical Error: illegal character \"=\"\n"+
-						"Syntactic Error: unexpected token \"2\"";
+		String errorMessage = "Syntactic Error: unexpected token \"=\"";
 		assertEquals(errorMessage,testUtilities.runChecker(setUp,testCase));
 	}
 	
@@ -236,7 +235,7 @@ public class ParserTest {
 	public void testParserFail06() {
 		String setUp = " int x; ";
 		String testCase = "//@[x := x += 2]";
-		String errorMessage = "Lexical Error: illegal character \"=\"";
+		String errorMessage = "Syntactic Error: unexpected token \"=\"";
 		assertEquals(errorMessage,testUtilities.runChecker(setUp,testCase));
 	}
 		

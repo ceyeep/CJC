@@ -19,64 +19,7 @@ Expr postfix_expression =
 	CJRESULT        {: return new CJResult(); :}
   ;
   
-// Iterators
 
-Access name =
-    qualified_cleanjava_name.q             {: return q; :}
-  ;
 
-Access qualified_cleanjava_name =
-    name.n ITERATOR simple_name.i   {: System.out.println("qualified cleanjava name"); 
 
-									return n.qualifiesAccess(i); :}
-  ;
 
-ExprStmt statement_expression =
-	operate_iterator_invocation.o  {: return new ExprStmt(o); :}
-  ;
-  
-Expr primary_no_new_array =
-	operate_iterator_invocation.o  {: return o; :}
-  ;
-
-Access operate_iterator_invocation =
-    name.n LPAREN CJVAR cj_variable_declarators.e SEMICOLON cj_expression_list.l? RPAREN {: 
-		
-				 if(n instanceof AbstractDot) {   
-						 
-				   AbstractDot d = (AbstractDot)n; 
-				   ParseName pn = (ParseName)d.extractLast();
-				   IterateOperator m = new IterateOperator(pn.getID(), l, e);
-				   System.out.println("option 1a: "+pn.getID());		
-				   m.setStart(pn.getStart()); // add location information
-				   m.setEnd(RPAREN.getEnd()); // add location information
-				   d.replaceLast(m);
-				   return d;
-				 }
-				 else {
-					System.out.println("option 1b");
-				   ParseName pn = (ParseName)n;
-				   return new IterateOperator(pn.getID(), l, e);
-				 }
-	:}
-
-   ;
-
-List cj_expression_list =
-    expression.e                               {: return new List().add(e); :}
-  | argument_list.l SEMICOLON expression.e         {: return l.add(e); :}
-  ;   
-   
-List cj_variable_declarators =
-    cj_variable_declarator.v                              {: return new List().add(v); :}
-  | cj_variable_declarators.l COMMA cj_variable_declarator.v {: return l.add(v); :}
-  ;
-CJVariableDecl cj_variable_declarator =
-    cj_variable_declarator_id.v                           {: return v; :}
-  | cj_variable_declarator_id.v EQ variable_initializer.i {: v.setInit(i); return v; :}
-  ;   
-   
-CJVariableDecl cj_variable_declarator_id = 
-	type.t IDENTIFIER dims.d?                       {: return new CJVariableDecl(IDENTIFIER, d, new Opt(), t); :}
-  ;   
-   

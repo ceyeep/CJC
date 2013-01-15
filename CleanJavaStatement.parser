@@ -11,7 +11,7 @@ AbstractSimpleConcurrentAssignment abstract_simple_concurrent_assignment =
 
 SimpleConcurrentAssignment simple_concurrent_assignment =
 	postfix_expression_list.dest CJEQ assignment_expression_list.source {: return new SimpleConcurrentAssignment(dest,source); :}
-	postfix_expression_list.dest CJREFEQ assignment_expression_list.source {: return new SimpleConcurrentAssignmentByRef(dest,source); :}
+  |	postfix_expression_list.dest CJREFEQ assignment_expression_list.source {: return new SimpleConcurrentAssignmentByRef(dest,source); :}
   ;
 
 List postfix_expression_list =
@@ -38,11 +38,3 @@ ExprAndAbstractSimpleConcurrentAssignment  expression_and_abstract_simple_concur
 	expression.e THEN abstract_simple_concurrent_assignment.s  {: return new ExprAndAbstractSimpleConcurrentAssignment(e, s); :}
   ;
   
-  
-/* List of expressions in intended function
-
-List concurrent_assignment_expr_list =
-	concurrent_assignment_expr.e				{: return new List().add(e); :}
-  |	concurrent_assignment_expr_list.l ELLIPSIS concurrent_assignment_expr.e {: return l.add(e); :}
-  ;
-*/

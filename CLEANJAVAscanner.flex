@@ -133,21 +133,9 @@
   // 3.10.5 String Literals
   \"                             { statestack.push(yystate()); yybegin(CLEANEXPRESSIONSTRING); strbuf.setLength(0); }
 
-  // CLEAN Informal expression (* ... *)
-  "(*"                           { statestack.push(yystate()); yybegin(CLEANINFORMALDESCRIPTION); strbuf.setLength(0); }
-
   // 3.10.7 The Null Literal
   "null"                         { return sym(Terminals.NULL_LITERAL); }
-  
-  // CLEANJAVA Literals
-  
-  "\\anything"					{ return sym(Terminals.ANYTHING_LITERAL); }  
-  
-  // CLEANJAVA iterators
-  //"\\any" 					{ return sym(Terminals.ANY_ITERATOR); }
-
-
- 
+     
   // 3.11 Separators
   "("                            { lParenInExpr();return sym(Terminals.LPAREN); }
   ")"                            { rParenInExpr();return sym(Terminals.RPAREN); }
@@ -158,7 +146,6 @@
   ";"                            { return sym(Terminals.SEMICOLON); }
   ","                            { return sym(Terminals.COMMA); }
   "."                            { return sym(Terminals.DOT); }
-  
   
   // 3.12 Operators
   ">"                            { return sym(Terminals.GT); }
@@ -185,24 +172,33 @@
   ">>"                           { return sym(Terminals.RSHIFT); }
   ">>>"                          { return sym(Terminals.URSHIFT); }
 
-
   "@"                            { return sym(Terminals.AT); }
   "..."                          { return sym(Terminals.ELLIPSIS); }
+  
+  // 3.8 Identifiers located at end of current state due to rule priority disambiguation
+  ([:jletter:]|[\ud800-\udfff])([:jletterdigit:]|[\ud800-\udfff])* { return sym(Terminals.IDENTIFIER); }
 
+    
+  // CLEAN Informal expression (* ... *)
+  "(*"                           { statestack.push(yystate()); yybegin(CLEANINFORMALDESCRIPTION); strbuf.setLength(0); }
+
+  // CLEANJAVA Literals
+  "\\anything"					{ return sym(Terminals.ANYTHING_LITERAL); }  
+  
   // CLEANJAVA Operators
   ":="							{ return sym(Terminals.CJEQ); }
   "@="							{ return sym(Terminals.CJREFEQ); }
   "->"							{ return sym(Terminals.THEN); }
   "\\else"						{ return sym(Terminals.CJELSE); }
-  "=>"							{ return sym(Terminals.ITERATOR); }
-  "\\cj"						{ return sym(Terminals.CJVAR); }
+  "=>"							{ return sym(Terminals.ITERATORACCESS); }
   
   // CLEANJAVA Special symbols
   "\\result"					{ return sym(Terminals.CJRESULT); }
-   "\\I"						{ return sym(Terminals.IDENTITY); } 
-
-  // 3.8 Identifiers located at end of current state due to rule priority disambiguation
-  ([:jletter:]|[\ud800-\udfff])([:jletterdigit:]|[\ud800-\udfff])* { return sym(Terminals.IDENTIFIER); }
+   "\\I"						{ return sym(Terminals.IDENTITY); }
+   
+  // CLEANJAVA Iterate Operators
+  "\\iterate"					{ return sym(Terminals.ITERATEOP); }
+   "="                          { return sym(Terminals.ITEQ); }
 
   }
 
