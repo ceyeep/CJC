@@ -186,13 +186,19 @@ public class ParserTest {
 						"\\else \\I]\n"+
 						"@*/");
 	}
-	
+		
 	/** Test CleanJava result. */
 	@Test
 	public void testParser22() {
 		String testCase = "//@ \\result := 3 ]";
 		String code = "public double foo2(){ return 3; }";
 		assertParseOk(testCase,code);
+	}
+	
+		/** Test iterate operator. */
+	@Test
+	public void testParser23() {
+		assertParseOk("//@ [ x := s1=>\\iterate(int a, int b = 3; false; a + b) ]");
 	}
 	
 	//TEST PARSER FAILS

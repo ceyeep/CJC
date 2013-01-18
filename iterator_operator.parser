@@ -5,11 +5,11 @@ Expr primary_no_new_array =
   ;
 
 Access iterate_operator_invocation =
-		primary.p ITERATORACCESS ITERATEOP LPAREN cj_variable_declarator.i COMMA 
-		cj_variable_declarator_with_initializer.a SEMICOLON iterate_operator_boolean_expression.b? expression.e RPAREN 
+		primary.p ITERATORACCESS ITERATEOP LPAREN formal_parameter.i COMMA formal_parameter_with_expression.a
+		SEMICOLON iterate_operator_boolean_expression.b? expression.e RPAREN 
 		{: return new IterateOperator(p, ITERATEOP, i, a, b, e);  :}
-	|	name.n ITERATORACCESS ITERATEOP LPAREN cj_variable_declarator.i COMMA
-		cj_variable_declarator_with_initializer.a SEMICOLON iterate_operator_boolean_expression.b? expression.e RPAREN 
+	|	name.n ITERATORACCESS ITERATEOP LPAREN formal_parameter.i COMMA formal_parameter_with_expression.a
+		SEMICOLON iterate_operator_boolean_expression.b? expression.e RPAREN 
 		{: return new IterateOperator(n, ITERATEOP, i, a, b, e);  :}
 		
 	//TODO: check complete implementation of method_invoctation in GenericMethods.parser in JastAddJ 5
@@ -17,19 +17,10 @@ Access iterate_operator_invocation =
   
 Opt iterate_operator_boolean_expression =
 	expression.e SEMICOLON                       {: return new Opt(e); :}
-  ;  
-  
-//CJ Variable Decl
-
-
-CJVariableDecl cj_variable_declarator =
-    cj_variable_declarator_id.v                           {: return v; :}
   ;
-  
-CJVariableDecl cj_variable_declarator_with_initializer =
-    cj_variable_declarator_id.v ITEQ variable_initializer.i {: v.setInit(i); return v; :}
-  ;   
-   
-CJVariableDecl cj_variable_declarator_id = 
-	type.t IDENTIFIER dims.d?                       {: return new CJVariableDecl(IDENTIFIER, d, new Opt(), t); :}
-  ;   
+ 
+ParameterDeclarationWithExpression formal_parameter_with_expression =
+	modifiers.m? type.t IDENTIFIER dims.d? ITEQ assignment_expression.a 
+	{: return new ParameterDeclarationWithExpression(new Modifiers(m), t.addArrayDims(d), IDENTIFIER, a); :}
+  ;
+ 

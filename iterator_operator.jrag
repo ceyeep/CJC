@@ -28,54 +28,83 @@ aspect IteratorOperator {
 			s.append(getOperator().substring(1));
 		else
 			s.append(getOperator());
-		s.append("( " + getIterator() + ", "+ getAccumulator() + "; "+ boolExp() + ", " + getArg() + " )");
+		s.append("( " + getIterator() + ", "+ getAccumulator() + "; "+ boolExp() + "; " + getArg() + " )");
 	}
 	
-	public void CJVariableDecl.toString(StringBuffer s){
+	public void ParameterDeclarationWithExpression.toString(StringBuffer s) {
+		getModifiers().toString(s);
 		getTypeAccess().toString(s);
 		s.append(" " + name());
-		if(getNumDims() > 0) {
-			getDims(0).toString(s);
-			for(int i = 1; i < getNumDims(); i++) {
-				getDims(i).toString(s);
+		s.append(" = ");
+		getExpr().toString(s);
+	} 
+	
+  //Name check
+ 
+	//Check if variable is modified in scope
+	eq IterateOperator.getIterator().inhModifiedInScope(Variable var) {
+		if(hasBool())
+			if (getBool().modifiedInScope(var))
+			{
+				return true;
 			}
+		if (getArg().modifiedInScope(var))
+		{
+			return true;
 		}
-		if(hasInit()) {
-			s.append(" = ");
-			getInit().toString(s);
-		}
+		return false;
 	}
-
+	
+	eq IterateOperator.getAccumulator().inhModifiedInScope(Variable var) {
+		if(hasBool())
+			if (getBool().modifiedInScope(var))
+			{
+				return true;
+			}
+		if (getArg().modifiedInScope(var))
+		{
+			return true;
+		}
+		return false;
+	}
+	
   //Lookup variable
-  /*
-	//CJVariableDecl
-	inh SimpleSet CJVariableDecl.lookupVariable(String name);
-	syn boolean CJVariableDecl.declaresVariable(String name) = name().equals(name);
-	
-	//Iterate operator
-	inh lazy SimpleSet IterateOperator.lookupVariable(String name);
-	
-	eq IterateOperator.getIterator().lookupVariable(String name) = localLookup(name);
-	eq IterateOperator.getAccumulator().lookupVariable(String name) = localLookup(name);
-	eq IterateOperator.getBool().lookupVariable(String name) = localLookup(name);
-	eq IterateOperator.getArg().lookupVariable(String name) = localLookup(name);
-	syn lazy SimpleSet IterateOperator.localLookup(String name) {
-		CJVariableDecl v = localVariableDeclaration(name);
-		if(v != null) 
-			return v;
-		return lookupVariable(name);
+
+	// The scope of a parameter of a iterate operator are the bool and arg elements
+	eq IterateOperator.getArg().lookupVariable(String name) {
+		SimpleSet set = parameterDeclaration(name);
+		// A declaration of an interate operator parameter name shadows any other variable declarations
+		if(!set.isEmpty()) return set;
+			// Delegate to other declarations in scope
+			return lookupVariable(name);
+	}
+	eq IterateOperator.getBool().lookupVariable(String name) {
+		SimpleSet set = parameterDeclarationBool(name);
+		// A declaration of an interate operator parameter name shadows any other variable declarations
+		if(!set.isEmpty()) return set;
+			// Delegate to other declarations in scope
+			return lookupVariable(name);
+	}
+	// An iterate operator may only declare one parameter named name
+	// This is enforced by a check that the declaration in scope for a declaration is itself
+	eq IterateOperator.getIterator().lookupVariable(String name) = parameterDeclaration(name);
+	eq IterateOperator.getAccumulator().lookupVariable(String name) = parameterDeclaration(name);
+
+	syn lazy SimpleSet IterateOperator.parameterDeclaration(String name) {
+		if(getIterator().name().equals(name))
+			return (ParameterDeclaration)getIterator();
+		if(getAccumulator().name().equals(name))
+			return (ParameterDeclaration)getAccumulator();
+		return SimpleSet.emptySet;
 	}
 	
-	syn lazy CJVariableDecl IterateOperator.localVariableDeclaration(String name) {
-		if(getIterator().declaresVariable(name))
-			return (CJVariableDecl)getIterator();
-		if(getAccumulator().declaresVariable(name))
-			return (CJVariableDecl)getAccumulator();
-		return null;
+	syn lazy SimpleSet IterateOperator.parameterDeclarationBool(String name) {
+		if(getIterator().name().equals(name))
+			return (ParameterDeclaration)getIterator();
+		return SimpleSet.emptySet;
 	}
-  
-	IterateOperator implements VariableScope;
-	*/
+ 
+
   //Type analysis
   
 	eq IterateOperator.type() = getAccumulator().getTypeAccess().type();
@@ -83,10 +112,16 @@ aspect IteratorOperator {
   //Type checking
   
 	public void IterateOperator.typeCheck() {
-		//Check if E2 type is equal to T2
-		if(!getArg().type().assignConversionTo(getAccumulator().getTypeAccess().type(), getArg()) )
-			error("E2 expression in " + getOperator() + " operator must be of type " +
+		//Check that E1 is of type T2
+		if(!getAccumulator().getExpr().type().assignConversionTo(getAccumulator().getTypeAccess().type(),getAccumulator().getExpr()))
+			error("E1 expression \"" + getAccumulator().getExpr() + "\" in " + getOperator() + " operator is incompatible with type " +
 				getAccumulator().getTypeAccess().type().typeName());
+	
+		//Check that E2 is of type T2
+		if(!getArg().type().assignConversionTo(getAccumulator().getTypeAccess().type(), getArg()) )
+			error("E2 expression \"" + getArg() + "\" in " + getOperator() + " operator must be of type " +
+				getAccumulator().getTypeAccess().type().typeName());
+				
 	}
 	
 }

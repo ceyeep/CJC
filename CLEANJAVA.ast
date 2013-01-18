@@ -60,9 +60,6 @@ AnythingLiteral:Literal ;
 
 //Iterator operators
 
-IterateOperator:Access ::= Caller:Expr <Operator:String> Iterator:CJVariableDecl Accumulator:CJVariableDecl [Bool:Expr] Arg:Expr;
+IterateOperator:Access ::= Caller:Expr <Operator:String> Iterator:ParameterDeclaration Accumulator:ParameterDeclarationWithExpression [Bool:Expr] Arg:Expr;
 
-CJVariableDecl:VariableDecl ::= TypeAccess:Access;
-
-
-
+ParameterDeclarationWithExpression:ParameterDeclaration ::= Expr;
