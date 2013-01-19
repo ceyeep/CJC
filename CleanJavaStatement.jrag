@@ -16,6 +16,7 @@ aspect CleanJavaStatement {
 	syn CJMethodDecl CJMethodDecl.containingCJMethodDecl() = this;
 	//syn CJConstructorDecl CJConstructorDecl.containingCJMethodDecl() = this;
 	
+	//TODO: review attributes in this section
 	eq CJMethodDecl.getSpecs().lookupVariable(String name) {
 		SimpleSet set = parameterDeclaration(name);
 		if (!set.isEmpty()) return set;
@@ -35,37 +36,57 @@ aspect CleanJavaStatement {
 	
 	syn String SimpleConcurrentAssignment.printOp() = " := ";
 	syn String SimpleConcurrentAssignmentByRef.printOp() = " @= ";
-		
-	public void SimpleConcurrentAssignment.toString(StringBuffer s) {
-		if(getNumDest() > 0) {
-			for(int i = 0; i < getNumDest(); i++) {
-				if(i != 0)
-					s.append(", ");
-				getDest(i).toString(s);
+
+	public void SplittedDefinition.toString(StringBuffer s) {
+		for(int i = 0; i < getNumAssignment(); i++) {
+			if(i != 0){
+				s.append(";");
+				s.append(indent());
 			}
+			getAssignment(i).toString(s);
 		}
+	}
+	
+	public void SimpleConcurrentAssignment.toString(StringBuffer s) {
+		for(int i = 0; i < getNumDest(); i++) {
+			if(i != 0)
+				s.append(", ");
+			getDest(i).toString(s);
+		}
+		
 		s.append(printOp());
-		if(getNumSource() > 0) {
-			for(int i = 0; i < getNumSource(); i++) {
-				if(i != 0)
-					s.append(", ");
-				getSource(i).toString(s);
-			}
+
+		for(int i = 0; i < getNumSource(); i++) {
+			if(i != 0)
+				s.append(", ");
+			getSource(i).toString(s);
 		}
 	}
 	
 	public void CondConcurrentAssignment.toString(StringBuffer s) {
-		if(getNumPairs() > 0) {
-			for(int i = 0; i < getNumPairs(); i++) {
-				if(i != 0)
-				{
-					s.append(indent());
-					s.append("| ");
-				}
-				getPairs(i).toString(s);
+		for(int i = 0; i < getNumPairs(); i++) {
+			if(i != 0){
+				s.append(indent());
+				s.append("| ");
 			}
+			getPairs(i).toString(s);
 		}
-		
+		if(hasElse()){
+			s.append(indent());
+			s.append("| otherwise -> ");
+			s.append(getElse());
+		}
+			
+	}
+	
+	public void SplittedDefinitionCondConcurrentAssignment.toString(StringBuffer s) {
+		for(int i = 0; i < getNumConditionalAssignment(); i++) {
+			if(i != 0){
+				s.append("; ");
+				s.append(indent());
+			}
+			getConditionalAssignment(i).toString(s);
+		}		
 	}
 	
 	public void ExprAndAbstractSimpleConcurrentAssignment.toString(StringBuffer s) {
@@ -79,7 +100,7 @@ aspect CleanJavaStatement {
 	}
 		
   // Type check
-	
+  
 	/** Perform type checking in a simple concurrent assignment. */
 	public void SimpleConcurrentAssignment.typeCheck() {
 		//Check if equation is balanced
@@ -155,5 +176,40 @@ aspect CleanJavaStatement {
 				duplicates += ", ";
 		}
 		return duplicates;
+	}
+	
+	/** Type check creating a new SimpleConcurrentAssignment. */
+	public void SplittedDefinition.typeCheck() {
+		createSimpleConcurrentAssignmentList();
+	}
+	
+	/** Merge lists of SimpleConcurrentAssignments into a single SimpleConcurrentAssignment. */
+	public void SplittedDefinition.createSimpleConcurrentAssignmentList(){
+		int referential = 0;
+		List<Expr> leftHandExprList = new List<Expr>();
+		List<Expr> rightHandExprList = new List<Expr>();
+		//Iterate over a list of simple concurrent assignments
+		for(int i = 0; i < getNumAssignment(); i++) {
+				SimpleConcurrentAssignment simpleConcurrentAssignment = getAssignment(i);
+				if(simpleConcurrentAssignment instanceof SimpleConcurrentAssignmentByRef)
+					referential++;
+				//Iterate over simple concurrent assignment destinations
+				for(int j = 0; j < simpleConcurrentAssignment.getNumDest(); j++)
+					leftHandExprList.add(simpleConcurrentAssignment.getDest(j));
+				//Iterate over simple concurrent assignment sources
+				for(int j = 0; j < simpleConcurrentAssignment.getNumSource(); j++)
+					rightHandExprList.add(simpleConcurrentAssignment.getSource(j));	
+		}
+		if(referential > 0 && referential < getNumAssignment() )
+			error("incorrect use of splitting definitions; you must use the same type of equality tests (e.g. referential semantics or value semantics)");
+		
+		if(referential > 0){
+			SimpleConcurrentAssignmentByRef simpleConcurrentAssignmenByRef = new SimpleConcurrentAssignmentByRef(leftHandExprList,rightHandExprList);
+			setAssignmentList(new List<SimpleConcurrentAssignment>().add(simpleConcurrentAssignmenByRef));
+		}
+		else{
+			SimpleConcurrentAssignment simpleConcurrentAssignment = new  SimpleConcurrentAssignment(leftHandExprList,rightHandExprList);
+			setAssignmentList(new List<SimpleConcurrentAssignment>().add(simpleConcurrentAssignment));
+		}
 	}
 }

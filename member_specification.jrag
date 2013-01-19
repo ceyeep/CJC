@@ -11,7 +11,7 @@
  ******************************************************************************/
 aspect CleanJavaMemberSpecs {
 
-	// pretty printing
+  // pretty printing
 	//TODO: create symbol elements
 	public void CJStaticInitializer.toString(StringBuffer s) {
 		singleLine(s);

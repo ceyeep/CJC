@@ -13,28 +13,31 @@
  * CLEANJAVA AST grammar
  */
 
-//TODO: work in a list of expressions in Intended fuction (extended intended function)
 //TODO: work in a list of intended functions (function composition i.e. f1;f2)
 
 abstract CJStmt;
 
 //Class body declaration
 
-CJStaticInitializer:StaticInitializer ::= Specs:AbstractConcurrentAssignment;
-CJInstanceInitializer:InstanceInitializer ::= Specs:AbstractConcurrentAssignment;
-CJConstructorDecl:ConstructorDecl ::= Specs:AbstractConcurrentAssignment;
-CJMethodDecl:MethodDecl ::= Specs:AbstractConcurrentAssignment;
+CJStaticInitializer:StaticInitializer ::= Specs:CJStmt;
+CJInstanceInitializer:InstanceInitializer ::= Specs:CJStmt;
+CJConstructorDecl:ConstructorDecl ::= Specs:CJStmt;
+CJMethodDecl:MethodDecl ::= Specs:CJStmt;
 
 //Statement annotation
 
-CJBlock:Block ::= Specs:AbstractConcurrentAssignment;
-
+CJBlock:Block ::= Specs:CJStmt;
 
 //CleanJava statements
 
 abstract AbstractConcurrentAssignment:CJStmt;
 
 abstract AbstractSimpleConcurrentAssignment:AbstractConcurrentAssignment;
+
+SplittedDefinition:CJStmt ::= Assignment:SimpleConcurrentAssignment*;
+
+SplittedDefinitionCondConcurrentAssignment:CJStmt ::= ConditionalAssignment:CondConcurrentAssignment*;
+
 //Should be 1..n
 SimpleConcurrentAssignment:AbstractSimpleConcurrentAssignment ::= Dest:Expr* Source:Expr*;
 
@@ -48,14 +51,13 @@ ExprAndAbstractSimpleConcurrentAssignment ::= Condition:Expr Then:AbstractSimple
 
 //CleanJava expressions
 
-
 InformalDescription:Expr ::= <Description:String>;
 
-CJResult:Expr ;
+CJResult:Expr;
 
 //Literals
 
-AnythingLiteral:Literal ;
+AnythingLiteral:Literal;
 
 
 //Iterator operators

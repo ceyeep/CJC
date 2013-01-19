@@ -1,8 +1,19 @@
 
-AbstractConcurrentAssignment abstract_concurrent_assignment =
-	START abstract_simple_concurrent_assignment.e RBRACK	{: return e; :}
-  |	START conditional_concurrent_assignment.e RBRACK	{: return e; :}
+CJStmt intended_function =
+	START IDENTITY RBRACK								{: return new Identity(); :}
+  |	START simple_concurrent_assignment_list.l RBRACK	{: return new SplittedDefinition(l); :}
+  | START conditional_assignment_composition.l RBRACK {: return new SplittedDefinitionCondConcurrentAssignment(l); :}
   ;
+  
+List simple_concurrent_assignment_list =
+    simple_concurrent_assignment.e                                 {: return new List().add(e); :}
+  |	simple_concurrent_assignment_list.l SEMICOLON simple_concurrent_assignment.e {: return l.add(e); :}
+  ;
+  
+List conditional_assignment_composition =
+    conditional_concurrent_assignment.e     {: return new List().add(e); :}
+  |	conditional_assignment_composition.l SEMICOLON conditional_concurrent_assignment.e {: return l.add(e); :}
+  ; 
   
 AbstractSimpleConcurrentAssignment abstract_simple_concurrent_assignment = 
 	simple_concurrent_assignment.a		{: return a; :}
