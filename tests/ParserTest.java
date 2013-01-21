@@ -195,11 +195,47 @@ public class ParserTest {
 		assertParseOk(testCase,code);
 	}
 	
-		/** Test iterate operator. */
+	/** Test iterate operator. */
 	@Test
 	public void testParser23() {
 		assertParseOk("//@ [ x := s1=>\\iterate(int a, int b = 3; false; a + b) ]");
 	}
+	
+	/** Test splitting definitions with simple concurrent assingment. */
+	@Test
+	public void testParser24() {
+		assertParseOk("//@ [ x := 3 \\add y := 4 ]");
+	}
+	
+	/** Test splitting definitions with simple concurrent assingment and referential semantics. */
+	@Test
+	public void testParser25() {
+		assertParseOk("//@ [ x @= 3 \\add y @= 4 \\add z @= 5 ]");
+	}
+	
+	/** Test non-deterministic conditional concurrent assignment. */
+	@Test
+	public void testParser26() {
+		assertParseOk("//@ [ x > 0 -> y := 3 \\add x == 0 -> y := 2 \\add x < 0 -> y := 4 ]");
+	}
+	
+	/** Test sequential composition of conditional concurrent assignments. */
+	@Test
+	public void testParser27() {
+		assertParseOk("//@ [ x > 0 -> y := 3; x == 0 -> y := 2; x < 0 -> y := 4 ]");
+	}
+	
+	/** Test conditional concurrent assignment with mixed types. */
+	@Test
+	public void testParser28() {
+		assertParseOk("//@ [ x > 0 -> x := 3 \\add x < 0 -> x := 2; x == 0 -> x := y \\else x := 1 ]");
+	}
+	
+	/** Test identity function. */
+	@Test
+	public void testParser29() {
+		assertParseOk("//@ [ \\I ]");
+	}	
 	
 	//TEST PARSER FAILS
 	
@@ -243,6 +279,30 @@ public class ParserTest {
 		String testCase = "//@[x := x += 2]";
 		String errorMessage = "Syntactic Error: unexpected token \"=\"";
 		assertEquals(errorMessage,testUtilities.runChecker(setUp,testCase));
+	}
+	
+	/** Test iterate operator with no E1. */
+	@Test
+	public void testParserFail07() {
+		assertParseError("//@ [ x := s1=>\\iterate(int a, int b; false; a + b) ]");
+	}
+	
+	/** Test incorrect use of \\else keyword. */
+	@Test
+	public void testParserFail08() {
+		assertParseError("//@ [ x > 0 -> x := 3 \\else x := 4 \\else x := 5 ]");
+	}
+	
+	/** Test non-deterministic conditional concurrent assignment with a final else syntactic sugar. */
+	@Test
+	public void testParserFail09() {
+		assertParseError("//@ [ x > 0 -> x := 1 \\add x := 1 ]");
+	}
+	
+	/** Test sequential composition of conditional concurrent assignments with a final else syntactic sugar. */
+	@Test
+	public void testParserFail10() {
+		assertParseError("//@ [ x > 0 -> x := 1 ; x := 1 ]");
 	}
 		
 	//Utility methods

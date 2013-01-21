@@ -191,6 +191,7 @@
   "->"							{ return sym(Terminals.THEN); }
   "\\else"						{ return sym(Terminals.CJELSE); }
   "=>"							{ return sym(Terminals.ITERATORACCESS); }
+  "\\add"						{ return sym(Terminals.CJADD); }
   
   // CLEANJAVA Special symbols
   "\\result"					{ return sym(Terminals.CJRESULT); }

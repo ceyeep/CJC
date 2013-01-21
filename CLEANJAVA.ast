@@ -36,16 +36,19 @@ abstract AbstractSimpleConcurrentAssignment:AbstractConcurrentAssignment;
 
 SplittedDefinition:CJStmt ::= Assignment:SimpleConcurrentAssignment*;
 
-SplittedDefinitionCondConcurrentAssignment:CJStmt ::= ConditionalAssignment:CondConcurrentAssignment*;
-
-//Should be 1..n
 SimpleConcurrentAssignment:AbstractSimpleConcurrentAssignment ::= Dest:Expr* Source:Expr*;
 
 SimpleConcurrentAssignmentByRef:SimpleConcurrentAssignment;
 
 Identity:AbstractSimpleConcurrentAssignment ;
 
-CondConcurrentAssignment:AbstractConcurrentAssignment ::= Pairs:ExprAndAbstractSimpleConcurrentAssignment* [Else:AbstractSimpleConcurrentAssignment];
+CondConcurrentAssignment:AbstractConcurrentAssignment ::= ConditionalAssignment:SingleCondConcurrentAssignment* [Else:AbstractSimpleConcurrentAssignment];
+
+SingleCondConcurrentAssignment ::= Pair:ExprAndAbstractSimpleConcurrentAssignment;
+
+SingleNDCondConcurrentAssignment:SingleCondConcurrentAssignment;
+
+SingleSeqCondConcurrentAssignment:SingleCondConcurrentAssignment;
 
 ExprAndAbstractSimpleConcurrentAssignment ::= Condition:Expr Then:AbstractSimpleConcurrentAssignment;
 

@@ -28,41 +28,41 @@ public class TestFile{
 	@SuppressWarnings("unused")
 	private int x = 0, y = 0, z = 0, sum = 0, max = 0;
 	private Object o1 = new Object(), o2 = new Object();
+	private int[] myArray = {1,2,3};
 	
-	//Class body declarations (entry CJ annotation point)
+//Class body declarations (entry CJ annotation point)
 	
-	//Static initializer
+  //Static initializer
 	//@ [ zero := 0 ]
 	static{
 		zero = 0;
 	}
 	
-	//Instance initializer
+  //Instance initializer
 	//@ [ x := 3 ]
 	{
 		x = 5;
 	}
 	
-	//Constructor declaration
+  //Constructor declaration
 	//@ [ x := 3]
 	public TestFile (){
 		x = 3;
 	}
 
-	//Method declaration	 
+  //Method declaration	 
 	//@ [ flag := true ]
 	public static void main(String[] args) {
 		flag = true;
 	}
 	
+//CleanJava annotations
 	
-	//CleanJava annotations
-	
-	//Single-line annotation
+  //Single-line annotation
 	//@ [ x := 3]
 	public void singleLineAnnotation(){}
 	
-	//Multi-line annotation
+  //Multi-line annotation
 	/*@ 
 	   [ x == 0 -> y := 0
 	    \else x > 0 -> y := 1 
@@ -70,7 +70,7 @@ public class TestFile{
 	 @*/
 	public void multiLineAnnotation(){}
 	
-	//Comment inside of an annotation
+  //Comment inside of an annotation
 	/*@ 
 	   // This is a traditional single-line Java comment
 	   [ x == 0 -> y := 0
@@ -79,8 +79,7 @@ public class TestFile{
 	 @*/
 	public void commentInsideAnnotation(){}
 	
-		
-	//Java expressions
+//Java expressions
 	
 	//@ [ sum := x + y ]
 	public void sum(){
@@ -92,43 +91,45 @@ public class TestFile{
 		max = Math.max(x, y);
 	}
 	
+//CleanJava operators and expressions
 	
-	//CleanJava operators and expressions
-	
-	//anything literal
+  //anything literal
 	//@ [x := \anything ]
 	public void anything(){
 		x = (int) (Math.random()*10);
 	}
 	
-	//informal notation
+  //informal notation
 	//@ [x := (* maximum of x and y *) ]
 	public void informalNotation01(){
 		max = Math.max(x, y);
 	}
 	
+  //informal notation + Java expression
 	//@ [x := (* maximum of x and y *) + 10 ]
 	public void informalNotation02(){
 		max = Math.max(x, y) + 10;
 	}
-	
+  
+  //Result operator
 	//@ [ \result := x + y ]
 	public double resultNotation(){
 		return x + y;
 	}
 	
-	//Iterate operators
-		//(MISSING TEST) =>
+  //Iterate operators
+	//@ [ x := myArray=>\iterate(int a, int b = 0; false; a + b) ]
+	public void iterateOperator(){}
 	
-	//Intended functions
+//Intended functions
 	
-	//Simple concurrent assignment (single element)
+  //Simple concurrent assignment (single element)
 	//@ [ x := 3 ]
 	public void concurrentAssignment01(){
 		x = 3;
 	}
 	
-	//Simple concurrent assignment (multiple elements)
+  //Simple concurrent assignment (multiple elements)
 	//@ [ x, y, z := 1, 2, 3 ]
 	public void concurrentAssignment02(){
 		x = 1;
@@ -136,19 +137,19 @@ public class TestFile{
 		z = 3;
 	}
 	
-	//Value semantics
+  //Value semantics
 	//@ [ o1 := o2 ]
 	public void valueSemantics(){
 		o1 = o2;
 	}
 	
-	//Referential semantics
+  //Referential semantics
 	//@ [ o1 @= o2 ]
 	public void referentialSemantics(){
 		// o1 = o2.clone(); with a clone() implementation
 	}
 	
-	//Conditional concurrent assignment
+  //Conditional concurrent assignment
 	/*@ 
 	   [ x > 0 -> y := 1
 	    \else x < 0 -> y := -1 
@@ -156,8 +157,23 @@ public class TestFile{
 	 @*/
 	public void conditionalConcurrentAssignment(){}
 	
+  //Splitting definition of a simple concurrent assignment
+	/*@ [ x := 3 \add
+		  y := 4 \add
+		  z := 5 ] @*/
+	public void splittingDefinitionSimpleConcurrentAssignment(){}
 	
-	//(MISSING TEST)Splitting definitions
+  //Splitting definition of a simple concurrent assignment with
+  //referential semantics
+ 	/*@ [ o1 @= o2 \add
+		  o2 @= o1 ] @*/
+	public void splittingDefinitionSimpleConcurrentAssignmentReferential(){}   
+	
+	/*@ [x < 0 -> y := -1 \add
+		 x == 0 -> y := 0 \add
+		 x > 0 -> y := 1 ] @*/
+	public void nonDeterministicConditionalConcurrentAssignment(){}
+	
 	//(MISSING TEST)Combining definitions
 		
 }

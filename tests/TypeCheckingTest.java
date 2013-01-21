@@ -209,7 +209,7 @@ public class TypeCheckingTest {
 	
 	/** Test concurrent assignment with referential semantics. */
 	@Test
-	public void testTypeChecking22() {
+	public void testTypeChecking20() {
 		String setUp = "Object o1 = new Object(), o2 = new Object();";
 		String testCase = "//@ [ o1 @= 02 ]";
 		assertEquals("",testUtilities.runChecker(setUp,testCase));
@@ -222,4 +222,82 @@ public class TypeCheckingTest {
 		String testCase = "//@ [ x @= 3 ]";
 		assertEquals("Semantic Error: cannot use x of primitive int type using referential semantics",testUtilities.runChecker(setUp,testCase));
 	}
+	
+	/** Test iterate operator. */
+	@Test
+	public void testTypeChecking22() {
+		String setUp = "int x = 2;\n"+
+					   "int[] myArray = new int[3];";
+		String testCase = "//@ [ x := myArray=>\\iterate(int a, int b = 0; a + b) ]";
+		assertEquals("",testUtilities.runChecker(setUp,testCase));
+	}
+	
+	/** Test iterate operator incorrect caller type. */
+	@Test
+	public void testTypeChecking23() {
+		String setUp = "int x = 2;";
+		String testCase = "//@ [ x := x=>\\iterate(int a, int b = 0; a + b) ]";
+		assertEquals("Semantic Error: type int of caller expression is neither array type nor java.lang.Iterable",testUtilities.runChecker(setUp,testCase));
+	}
+	
+	/** Test iterate operator with incorrect iterator variable type. */
+	@Test
+	public void testTypeChecking24() {
+		String setUp = "int x = 2;\n"+
+					   "String[] myArray = new String[3];";
+		String testCase = "//@ [ x := myArray=>\\iterate(int a, int b = 0; b) ]";
+		assertEquals("Semantic Error: iterator variable of type int cannot be assigned an element of type java.lang.String",testUtilities.runChecker(setUp,testCase));
+	}
+	
+	/** Test iterate operator with duplicate parameter variable. */
+	@Test
+	public void testTypeChecking25() {
+		String setUp = "int x = 2;\n"+
+					   "int[] myArray = new int[3];";
+		String testCase = "//@ [ x := myArray=>\\iterate(int a, int a = 0; a) ]";
+		assertEquals("Semantic Error: duplicate declaration of parameter a",testUtilities.runChecker(setUp,testCase));
+	}
+	
+	/** Test iterate operator E1 is of type T2. */
+	@Test
+	public void testTypeChecking26() {
+		String setUp = "int x = 2;\n"+
+					   "int[] myArray = new int[3];";
+		String testCase = "//@ [ x := myArray=>\\iterate(int a, int b = true; a) ]";
+		assertEquals("Semantic Error: E1 expression \"true\" in \\iterate operator is incompatible with type int",testUtilities.runChecker(setUp,testCase));
+	}
+	
+	/** Test iterate operator E2 is of type T2. */
+	@Test
+	public void testTypeChecking27() {
+		String setUp = "int x = 2;\n"+
+					   "int[] myArray = new int[3];";
+		String testCase = "//@ [ x := myArray=>\\iterate(int a, int b = 0; true) ]";
+		assertEquals("Semantic Error: E2 expression \"true\" in \\iterate operator must be of type int",testUtilities.runChecker(setUp,testCase));
+	}
+	
+	/** Test splitted definition with value semantics. */
+	@Test
+	public void testTypeChecking28() {
+		String setUp = "int x, y, z;";
+		String testCase = "//@ [ x := 1 \\add y := 1 \\add z := 1 ]";
+		assertEquals("",testUtilities.runChecker(setUp,testCase));
+	}
+	
+	/** Test splitted definition with referential semantics. */
+	@Test
+	public void testTypeChecking29() {
+		String setUp = "String a = \"hi\", b, c;";
+		String testCase = "//@ [ b @= a \\add c @= a ]";
+		assertEquals("",testUtilities.runChecker(setUp,testCase));
+	}
+	
+	/** Test splitted definition with different semantics. */
+	@Test
+	public void testTypeChecking30() {
+		String setUp = "String a, b;";
+		String testCase = "//@ [ b := \"hello\" \\add a @= b ]";
+		assertEquals("Semantic Error: incorrect use of splitting definitions; you must use the same type of equality tests (e.g. referential semantics or value semantics)",testUtilities.runChecker(setUp,testCase));
+	}
+
 }

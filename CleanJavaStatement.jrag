@@ -36,11 +36,14 @@ aspect CleanJavaStatement {
 	
 	syn String SimpleConcurrentAssignment.printOp() = " := ";
 	syn String SimpleConcurrentAssignmentByRef.printOp() = " @= ";
+	syn String SingleCondConcurrentAssignment.printOp() = " | ";
+	syn String SingleNDCondConcurrentAssignment.printOp() = " , ";
+	syn String SingleSeqCondConcurrentAssignment.printOp() = " ; ";
 
 	public void SplittedDefinition.toString(StringBuffer s) {
 		for(int i = 0; i < getNumAssignment(); i++) {
 			if(i != 0){
-				s.append(";");
+				s.append(",");
 				s.append(indent());
 			}
 			getAssignment(i).toString(s);
@@ -64,31 +67,26 @@ aspect CleanJavaStatement {
 	}
 	
 	public void CondConcurrentAssignment.toString(StringBuffer s) {
-		for(int i = 0; i < getNumPairs(); i++) {
-			if(i != 0){
-				s.append(indent());
-				s.append("| ");
-			}
-			getPairs(i).toString(s);
-		}
-		if(hasElse()){
-			s.append(indent());
-			s.append("| otherwise -> ");
-			s.append(getElse());
-		}
-			
-	}
-	
-	public void SplittedDefinitionCondConcurrentAssignment.toString(StringBuffer s) {
-		for(int i = 0; i < getNumConditionalAssignment(); i++) {
-			if(i != 0){
-				s.append("; ");
+		int assignments = getNumConditionalAssignment();
+		for(int i = 0; i < assignments; i++) {
+			if(i > 0 && i < assignments) {
+				s.append(getConditionalAssignment(i).printOp());
 				s.append(indent());
 			}
 			getConditionalAssignment(i).toString(s);
-		}		
+		}
+		if(hasElse()){
+			s.append(" |");
+			s.append(indent());
+			s.append("otherwise -> ");
+			getElse().toString(s);
+		}
 	}
 	
+	public void SingleCondConcurrentAssignment.toString(StringBuffer s){
+		getPair().toString(s);
+	}
+		
 	public void ExprAndAbstractSimpleConcurrentAssignment.toString(StringBuffer s) {
 		getCondition().toString(s);
 		s.append(" -> ");
@@ -178,9 +176,11 @@ aspect CleanJavaStatement {
 		return duplicates;
 	}
 	
-	/** Type check creating a new SimpleConcurrentAssignment. */
+	/** Type check creating a single SimpleConcurrentAssignment from
+		splitted definitions. */
 	public void SplittedDefinition.typeCheck() {
-		createSimpleConcurrentAssignmentList();
+		if(getNumAssignment() > 1)
+			createSimpleConcurrentAssignmentList();
 	}
 	
 	/** Merge lists of SimpleConcurrentAssignments into a single SimpleConcurrentAssignment. */
@@ -200,13 +200,15 @@ aspect CleanJavaStatement {
 				for(int j = 0; j < simpleConcurrentAssignment.getNumSource(); j++)
 					rightHandExprList.add(simpleConcurrentAssignment.getSource(j));	
 		}
+		//Check if splitted definition has different definition semantics
 		if(referential > 0 && referential < getNumAssignment() )
 			error("incorrect use of splitting definitions; you must use the same type of equality tests (e.g. referential semantics or value semantics)");
-		
+		//Add a new assignment by ref
 		if(referential > 0){
 			SimpleConcurrentAssignmentByRef simpleConcurrentAssignmenByRef = new SimpleConcurrentAssignmentByRef(leftHandExprList,rightHandExprList);
 			setAssignmentList(new List<SimpleConcurrentAssignment>().add(simpleConcurrentAssignmenByRef));
 		}
+		//Add a new assignment by value
 		else{
 			SimpleConcurrentAssignment simpleConcurrentAssignment = new  SimpleConcurrentAssignment(leftHandExprList,rightHandExprList);
 			setAssignmentList(new List<SimpleConcurrentAssignment>().add(simpleConcurrentAssignment));
