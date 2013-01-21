@@ -17,7 +17,7 @@ aspect CleanJavaStatement {
 	//syn CJConstructorDecl CJConstructorDecl.containingCJMethodDecl() = this;
 	
 	//TODO: review attributes in this section
-	eq CJMethodDecl.getSpecs().lookupVariable(String name) {
+	eq CJMethodDecl.getSpec().lookupVariable(String name) {
 		SimpleSet set = parameterDeclaration(name);
 		if (!set.isEmpty()) return set;
 		// Delegate to other declarations in scope
@@ -26,10 +26,10 @@ aspect CleanJavaStatement {
 
   // Unreachable Statements (see UnreachableStatements.jrag)
 
-	eq CJStaticInitializer.getSpecs().reachable() = true;
-	eq CJInstanceInitializer.getSpecs().reachable()  = true; 
-	eq CJMethodDecl.getSpecs().reachable()        = true;
-	eq CJConstructorDecl.getSpecs().reachable()   = true;
+	eq CJStaticInitializer.getSpec().reachable() = true;
+	eq CJInstanceInitializer.getSpec().reachable()  = true; 
+	eq CJMethodDecl.getSpec().reachable()        = true;
+	eq CJConstructorDecl.getSpec().reachable()   = true;
 
 
   // Pretty printer
@@ -38,8 +38,17 @@ aspect CleanJavaStatement {
 	syn String SimpleConcurrentAssignmentByRef.printOp() = " @= ";
 	syn String SingleCondConcurrentAssignment.printOp() = " | ";
 	syn String SingleNDCondConcurrentAssignment.printOp() = " , ";
-	syn String SingleSeqCondConcurrentAssignment.printOp() = " ; ";
 
+	public void CombinedDefinition.toString(StringBuffer s) {
+		for(int i = 0; i < getNumDefinition(); i++) {
+			if(i != 0){
+				s.append(";");
+				s.append(indent());
+			}
+			getDefinition(i).toString(s);
+		}
+	}
+	
 	public void SplittedDefinition.toString(StringBuffer s) {
 		for(int i = 0; i < getNumAssignment(); i++) {
 			if(i != 0){

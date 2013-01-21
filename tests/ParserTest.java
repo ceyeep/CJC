@@ -235,7 +235,13 @@ public class ParserTest {
 	@Test
 	public void testParser29() {
 		assertParseOk("//@ [ \\I ]");
-	}	
+	}
+
+	/** Test combined definitions. */
+	@Test
+	public void testParserFail10() {
+		assertParseOk("//@ [ x > 0 -> x := 1 \\add x < 0 -> x := 0; z := 1 \\add y := 1; \\I ]");
+	}
 	
 	//TEST PARSER FAILS
 	
@@ -298,13 +304,7 @@ public class ParserTest {
 	public void testParserFail09() {
 		assertParseError("//@ [ x > 0 -> x := 1 \\add x := 1 ]");
 	}
-	
-	/** Test sequential composition of conditional concurrent assignments with a final else syntactic sugar. */
-	@Test
-	public void testParserFail10() {
-		assertParseError("//@ [ x > 0 -> x := 1 ; x := 1 ]");
-	}
-		
+			
 	//Utility methods
 	
 	/** Check if there are no parsing errors for a given testcase. */

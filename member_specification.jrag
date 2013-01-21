@@ -16,7 +16,7 @@ aspect CleanJavaMemberSpecs {
 	public void CJStaticInitializer.toString(StringBuffer s) {
 		singleLine(s);
 		s.append("/*@ [ ");
-		getSpecs().toString(s);
+		getSpec().toString(s);
 		s.append(" ] @*/");
 		super.toString(s);
 	}
@@ -24,7 +24,7 @@ aspect CleanJavaMemberSpecs {
 	public void CJInstanceInitializer.toString(StringBuffer s) {
 		singleLine(s);
 		s.append("/*@ [ ");
-		getSpecs().toString(s);
+		getSpec().toString(s);
 		s.append(" ] @*/");
 		super.toString(s);
 	}
@@ -32,7 +32,7 @@ aspect CleanJavaMemberSpecs {
 	public void CJConstructorDecl.toString(StringBuffer s) {
 		singleLine(s);
 		s.append("/*@ [ ");
-		getSpecs().toString(s);
+		getSpec().toString(s);
 		s.append(" ] @*/");
 		super.toString(s);
 	}
@@ -40,7 +40,7 @@ aspect CleanJavaMemberSpecs {
 	public void CJMethodDecl.toString(StringBuffer s){
 		singleLine(s);
 		s.append("/*@ [ ");
-		getSpecs().toString(s);
+		getSpec().toString(s);
 		s.append(" ] @*/");
 		super.toString(s);
 	}
@@ -48,7 +48,7 @@ aspect CleanJavaMemberSpecs {
 	public void CJBlock.toString(StringBuffer s){
 		singleLine(s);
 		s.append("/*@ [ ");
-		getSpecs().toString(s);
+		getSpec().toString(s);
 		s.append(" ] @*/");
 		super.toString(s);
 	}

@@ -13,28 +13,28 @@
  * CLEANJAVA AST grammar
  */
 
-//TODO: work in a list of intended functions (function composition i.e. f1;f2)
-
-abstract CJStmt;
-
 //Class body declaration
 
-CJStaticInitializer:StaticInitializer ::= Specs:CJStmt;
-CJInstanceInitializer:InstanceInitializer ::= Specs:CJStmt;
-CJConstructorDecl:ConstructorDecl ::= Specs:CJStmt;
-CJMethodDecl:MethodDecl ::= Specs:CJStmt;
+CJStaticInitializer:StaticInitializer ::= Spec:CJStmt;
+CJInstanceInitializer:InstanceInitializer ::= Spec:CJStmt;
+CJConstructorDecl:ConstructorDecl ::= Spec:CJStmt;
+CJMethodDecl:MethodDecl ::= Spec:CJStmt;
 
 //Statement annotation
 
-CJBlock:Block ::= Specs:CJStmt;
+CJBlock:Block ::= Spec:CJStmt;
 
 //CleanJava statements
+
+abstract CJStmt;
+
+CombinedDefinition:CJStmt ::= Definition:CJStmt*;
+
+SplittedDefinition:CJStmt ::= Assignment:SimpleConcurrentAssignment*;
 
 abstract AbstractConcurrentAssignment:CJStmt;
 
 abstract AbstractSimpleConcurrentAssignment:AbstractConcurrentAssignment;
-
-SplittedDefinition:CJStmt ::= Assignment:SimpleConcurrentAssignment*;
 
 SimpleConcurrentAssignment:AbstractSimpleConcurrentAssignment ::= Dest:Expr* Source:Expr*;
 
@@ -47,8 +47,6 @@ CondConcurrentAssignment:AbstractConcurrentAssignment ::= ConditionalAssignment:
 SingleCondConcurrentAssignment ::= Pair:ExprAndAbstractSimpleConcurrentAssignment;
 
 SingleNDCondConcurrentAssignment:SingleCondConcurrentAssignment;
-
-SingleSeqCondConcurrentAssignment:SingleCondConcurrentAssignment;
 
 ExprAndAbstractSimpleConcurrentAssignment ::= Condition:Expr Then:AbstractSimpleConcurrentAssignment;
 
