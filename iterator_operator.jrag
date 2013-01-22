@@ -17,20 +17,27 @@ aspect IteratorOperator {
 
   //Pretty printer
 	//Attribute representing the first boolean expression of the iterate operator
-	syn Expr IterateOperator.boolExp() =  !hasBool() ? new BooleanLiteral(true) : getBool();
+	syn Expr IterateOperatorBody.boolExp() =  !hasBool() ? new BooleanLiteral(true) : getBool();
   
-	syn String IterateOperator.printOp() = "=>";
+	syn String AbstractIterateOperator.printOp() = "=>";
   
-	public void IterateOperator.toString(StringBuffer s){
+	public void AbstractIterateOperator.toString(StringBuffer s){
 		getCaller().toString(s);
 		s.append(printOp());
 		if(getOperator().startsWith("\\"))
 			s.append(getOperator().substring(1));
 		else
 			s.append(getOperator());
-		s.append("( " + getIterator() + ", "+ getAccumulator() + "; "+ boolExp() + "; " + getArg() + " )");
+		getBody().toString(s);
 	}
 	
+	public void IterateOperatorBody.toString(StringBuffer s){
+		if(hasAccumulator())
+			s.append("( " + getIterator() + ", "+ getAccumulator() + "; "+ boolExp() + "; " + getArg() + " )");
+		else
+			s.append("( " + getIterator() + "; "+ boolExp() + "; " + getArg() + " )");
+	}
+			
 	public void ParameterDeclarationWithExpression.toString(StringBuffer s) {
 		getModifiers().toString(s);
 		getTypeAccess().toString(s);
@@ -42,7 +49,7 @@ aspect IteratorOperator {
   //Name check
  
 	//Check if variable is modified in scope
-	eq IterateOperator.getIterator().inhModifiedInScope(Variable var) {
+	eq IterateOperatorBody.getIterator().inhModifiedInScope(Variable var) {
 		if(hasBool())
 			if (getBool().modifiedInScope(var))
 			{
@@ -55,7 +62,7 @@ aspect IteratorOperator {
 		return false;
 	}
 	
-	eq IterateOperator.getAccumulator().inhModifiedInScope(Variable var) {
+	eq IterateOperatorBody.getAccumulator().inhModifiedInScope(Variable var) {
 		if(hasBool())
 			if (getBool().modifiedInScope(var))
 			{
@@ -67,76 +74,86 @@ aspect IteratorOperator {
 		}
 		return false;
 	}
-	
+			
   //Lookup variable
-
+	inh SimpleSet IterateOperatorBody.lookupVariable(String name);
+  
 	// The scope of a parameter of a iterate operator are the bool and arg elements
-	eq IterateOperator.getArg().lookupVariable(String name) {
+	eq IterateOperatorBody.getArg().lookupVariable(String name) {
 		SimpleSet set = parameterDeclaration(name);
-		// A declaration of an interate operator parameter name shadows any other variable declarations
+		// A declaration of an iterate operator parameter name shadows any other variable declarations
 		if(!set.isEmpty()) return set;
 			// Delegate to other declarations in scope
 			return lookupVariable(name);
 	}
-	eq IterateOperator.getBool().lookupVariable(String name) {
+	eq IterateOperatorBody.getBool().lookupVariable(String name) {
 		SimpleSet set = parameterDeclarationBool(name);
-		// A declaration of an interate operator parameter name shadows any other variable declarations
+		// A declaration of an iterate operator parameter name shadows any other variable declarations
 		if(!set.isEmpty()) return set;
 			// Delegate to other declarations in scope
 			return lookupVariable(name);
 	}
 	// An iterate operator may only declare one parameter named name
 	// This is enforced by a check that the declaration in scope for a declaration is itself
-	eq IterateOperator.getIterator().lookupVariable(String name) = parameterDeclaration(name);
-	eq IterateOperator.getAccumulator().lookupVariable(String name) = parameterDeclaration(name);
+	eq IterateOperatorBody.getIterator().lookupVariable(String name) = parameterDeclaration(name);
+	eq IterateOperatorBody.getAccumulator().lookupVariable(String name) = parameterDeclaration(name);
 
-	syn lazy SimpleSet IterateOperator.parameterDeclaration(String name) {
+	syn lazy SimpleSet IterateOperatorBody.parameterDeclaration(String name) {
 		if(getIterator().name().equals(name))
 			return (ParameterDeclaration)getIterator();
-		if(getAccumulator().name().equals(name))
-			return (ParameterDeclaration)getAccumulator();
+		if(hasAccumulator()){
+			if(getAccumulator().name().equals(name))
+				return (ParameterDeclaration)getAccumulator();
+		}
 		return SimpleSet.emptySet;
 	}
 	
-	syn lazy SimpleSet IterateOperator.parameterDeclarationBool(String name) {
+	syn lazy SimpleSet IterateOperatorBody.parameterDeclarationBool(String name) {
 		if(getIterator().name().equals(name))
 			return (ParameterDeclaration)getIterator();
 		return SimpleSet.emptySet;
 	}
- 
 
   //Type analysis
   
-	eq IterateOperator.type() = getAccumulator().getTypeAccess().type();
+	eq IterateOperator.type() = getBody().getAccumulator().getTypeAccess().type();
+	eq AnyOperator.type() = getBody().getIterator().getTypeAccess().type();
 	
   //Type checking
   
-	public void IterateOperator.typeCheck() {
+	public void AbstractIterateOperator.typeCheck() {
 		//Check that caller expression is of type Array or Iterable
 		if(!getCaller().type().isIterable() &&  !getCaller().type().isArrayDecl())
 			error("type " + getCaller().type().name() + 
 			      " of caller expression is neither array type nor java.lang.Iterable");
-
-		else if(getCaller().type().isArrayDecl() && !getCaller().type().componentType().assignConversionTo(getIterator().type(), null))
-			error("iterator variable of type " + getIterator().type().typeName() + " cannot be assigned an element of type " + getCaller().type().componentType().typeName()); 
+				  
+		else if(getCaller().type().isArrayDecl() && !getCaller().type().componentType().assignConversionTo(getBody().getIterator().type(), null))
+			error("iterator variable of type " + getBody().getIterator().type().typeName() + " cannot be assigned an element of type " + getCaller().type().componentType().typeName()); 
 		else if(getCaller().type().isIterable() && !getCaller().type().isUnknown()) {
 		  MethodDecl iterator = (MethodDecl)getCaller().type().memberMethods("iterator").iterator().next();
 		  MethodDecl next = (MethodDecl)iterator.type().memberMethods("next").iterator().next();
 		  TypeDecl componentType = next.type();
-		  if(!componentType.assignConversionTo(getIterator().type(), null))
-			error("iterator variable of type " + getIterator().type().typeName() + " cannot be assigned an element of type " + componentType.typeName()); 
+		  if(!componentType.assignConversionTo(getBody().getIterator().type(), null))
+			error("iterator variable of type " + getBody().getIterator().type().typeName() + " cannot be assigned an element of type " + componentType.typeName()); 
 		}
-	
-		//Check that E1 is of type T2
-		if(!getAccumulator().getExpr().type().assignConversionTo(getAccumulator().getTypeAccess().type(),getAccumulator().getExpr()))
-			error("E1 expression \"" + getAccumulator().getExpr() + "\" in " + getOperator() + " operator is incompatible with type " +
-				getAccumulator().getTypeAccess().type().typeName());
-	
-		//Check that E2 is of type T2
-		if(!getArg().type().assignConversionTo(getAccumulator().getTypeAccess().type(), getArg()) )
-			error("E2 expression \"" + getArg() + "\" in " + getOperator() + " operator must be of type " +
-				getAccumulator().getTypeAccess().type().typeName());
-				
+		
+		//If iterate operator has an accumulator, check type
+		if(getBody().hasAccumulator()){
+			//Check that E1 is of type T2
+			if(!getBody().getAccumulator().getExpr().type().assignConversionTo(getBody().getAccumulator().getTypeAccess().type(),getBody().getAccumulator().getExpr()))
+				error("E1 expression \"" + getBody().getAccumulator().getExpr() + "\" in " + getOperator() + " operator is incompatible with type " +
+					getBody().getAccumulator().getTypeAccess().type().typeName());
+		
+			//Check that E2 is of type T2
+			if(!getBody().getArg().type().assignConversionTo(getBody().getAccumulator().getTypeAccess().type(), getBody().getArg()) )
+				error("E2 expression \"" + getBody().getArg() + "\" in " + getOperator() + " operator must be of type " +
+					getBody().getAccumulator().getTypeAccess().type().typeName());
+		}
 	}
-	
+
+	public void AnyOperator.typeCheck() {
+		super.typeCheck();
+		if(!getBody().getArg().type().assignConversionTo(getBody().getArg().typeBoolean(), getBody().getArg()))
+			error("B2 expression must be a boolean expression");
+	}
 }

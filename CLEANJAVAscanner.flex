@@ -195,11 +195,12 @@
   
   // CLEANJAVA Special symbols
   "\\result"					{ return sym(Terminals.CJRESULT); }
-   "\\I"						{ return sym(Terminals.IDENTITY); }
+  "\\I"						   	{ return sym(Terminals.IDENTITY); }
    
   // CLEANJAVA Iterate Operators
   "\\iterate"					{ return sym(Terminals.ITERATEOP); }
-   "="                          { return sym(Terminals.ITEQ); }
+  "="                           { return sym(Terminals.ITEQ); }
+  "\\any"						{ return sym(Terminals.ANYOP); }
 
   }
 

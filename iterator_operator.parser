@@ -1,24 +1,33 @@
 // Iterators
 
 Expr primary_no_new_array =
-	iterate_operator_invocation.o  {: return o; :}
+	iterate_operator_access.o  {: return o; :}
   ;
 
-Access iterate_operator_invocation =
-		primary.p ITERATORACCESS ITERATEOP LPAREN formal_parameter.i COMMA formal_parameter_with_expression.a
-		SEMICOLON iterate_operator_boolean_expression.b? expression.e RPAREN 
-		{: return new IterateOperator(p, ITERATEOP, i, a, b, e);  :}
-	|	name.n ITERATORACCESS ITERATEOP LPAREN formal_parameter.i COMMA formal_parameter_with_expression.a
-		SEMICOLON iterate_operator_boolean_expression.b? expression.e RPAREN 
-		{: return new IterateOperator(n, ITERATEOP, i, a, b, e);  :}
-		
+Access iterate_operator_access =
+	iterate_operator_caller.c ITERATEOP  iterate_operator_body.b {: return new IterateOperator(c, ITERATEOP, b);  :}
+	iterate_operator_caller.c ANYOP  iterate_operator_body.b {: return new AnyOperator(c, ANYOP, b);  :}
 	//TODO: check complete implementation of method_invoctation in GenericMethods.parser in JastAddJ 5
-	;
+  ;
   
+Expr iterate_operator_caller =
+	primary.p ITERATORACCESS {: return p; :}
+  |	name.n ITERATORACCESS 	 {: return n; :}
+  ;
+	
+IterateOperatorBody iterate_operator_body =
+	LPAREN formal_parameter.i iterate_operator_accumulator.a? SEMICOLON iterate_operator_boolean_expression.b? expression.e RPAREN 
+	{: return new IterateOperatorBody(i, a, b, e);  :}	
+  ;
+  
+Opt iterate_operator_accumulator =
+	COMMA formal_parameter_with_expression.a	 {: return new Opt(a); :}
+  ;
+	
 Opt iterate_operator_boolean_expression =
 	expression.e SEMICOLON                       {: return new Opt(e); :}
   ;
- 
+
 ParameterDeclarationWithExpression formal_parameter_with_expression =
 	modifiers.m? type.t IDENTIFIER dims.d? ITEQ assignment_expression.a 
 	{: return new ParameterDeclarationWithExpression(new Modifiers(m), t.addArrayDims(d), IDENTIFIER, a); :}

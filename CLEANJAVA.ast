@@ -60,9 +60,14 @@ CJResult:Expr;
 
 AnythingLiteral:Literal;
 
-
 //Iterator operators
 
-IterateOperator:Access ::= Caller:Expr <Operator:String> Iterator:ParameterDeclaration Accumulator:ParameterDeclarationWithExpression [Bool:Expr] Arg:Expr;
+abstract AbstractIterateOperator:Access ::= Caller:Expr <Operator:String> Body:IterateOperatorBody;
+
+IterateOperator:AbstractIterateOperator;
+
+IterateOperatorBody ::= Iterator:ParameterDeclaration [Accumulator:ParameterDeclarationWithExpression] [Bool:Expr] Arg:Expr;
 
 ParameterDeclarationWithExpression:ParameterDeclaration ::= Expr;
+
+AnyOperator:AbstractIterateOperator;
