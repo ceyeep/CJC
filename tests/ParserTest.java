@@ -195,10 +195,18 @@ public class ParserTest {
 		assertParseOk(testCase,code);
 	}
 	
-	/** Test iterate operator. */
+	/** Test iterate operators. */
 	@Test
 	public void testParser23() {
 		assertParseOk("//@ [ x := s1=>\\iterate(int a, int b = 3; false; a + b) ]");
+		assertParseOk("//@ [ s1 := intarray=>\\any(String a; a.length() > 0) ]");
+		assertParseOk("//@ [ s1 := intarray=>\\collect(String a; a.length() > 0) ]");
+		assertParseOk("//@ [ s1 := intarray=>\\exists(String a; a.length() > 0) ]");
+		assertParseOk("//@ [ s1 := intarray=>\\forAll(String a; a.length() > 0) ]");
+		assertParseOk("//@ [ s1 := intarray=>\\isUnique(String a; a.length() > 0) ]");
+		assertParseOk("//@ [ s1 := intarray=>\\one(String a; a.length() > 0) ]");
+		assertParseOk("//@ [ s1 := intarray=>\\reject(String a; a.length() > 0) ]");
+		assertParseOk("//@ [ s1 := intarray=>\\select(String a; a.length() > 0) ]");
 	}
 	
 	/** Test splitting definitions with simple concurrent assingment. */
@@ -243,6 +251,7 @@ public class ParserTest {
 		assertParseOk("//@ [ x > 0 -> x := 1 \\add x < 0 -> x := 0; z := 1 \\add y := 1; \\I ]");
 	}
 	
+
 	//TEST PARSER FAILS
 	
 	/** Test missing value in the right side of the assignment expression. */

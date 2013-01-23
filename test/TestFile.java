@@ -121,6 +121,9 @@ public class TestFile{
 	//@ [ x := myArray=>\iterate(int a, int b = 0; false; a + b) ]
 	public void iterateOperator(){}
 	
+	//@ [ x := myArray=>\any(int a; a == 0) ]
+	public void iterateAnyOperator(){}
+	
 //Intended functions
 	
   //Simple concurrent assignment (single element)
@@ -174,6 +177,9 @@ public class TestFile{
 		 x > 0 -> y := 1 ] @*/
 	public void nonDeterministicConditionalConcurrentAssignment(){}
 	
-	//(MISSING TEST)Combining definitions
+	/*@ [x < 0 -> y := -1 ;
+	 x == 0 -> y := 0 ;
+	 x > 0 -> y := 1 ] @*/
+	public void sequentialComposition(){}
 		
 }

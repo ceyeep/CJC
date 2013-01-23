@@ -299,5 +299,110 @@ public class TypeCheckingTest {
 		String testCase = "//@ [ b := \"hello\" \\add a @= b ]";
 		assertEquals("Semantic Error: incorrect use of splitting definitions; you must use the same type of equality tests (e.g. referential semantics or value semantics)",testUtilities.runChecker(setUp,testCase));
 	}
+	
+	/** Test any operator. */
+	@Test
+	public void testTypeChecking31() {
+		String setUp =  "String s1; \n" +
+						"String[] myArray = new String[]{\"1\",\"2\"};";
+		String testCase = "//@ [ s1 := myArray=>\\any(String a; a.length() > 0) ]";
+		assertEquals("",testUtilities.runChecker(setUp,testCase));
+		
+		testCase = "//@ [ s1 := myArray=>\\any(String a; a) ]";
+		assertEquals("Semantic Error: B2 expression must be a boolean expression",testUtilities.runChecker(setUp,testCase));
+	}
+	
+	/** Test collect operator. */
+	@Test
+	public void testTypeChecking32() {
+		String setUp =  "String s1; \n" +
+						"AST.CJCollection<String> collection = new AST.CJSet<String>(); \n" +
+						"String[] myArray = new String[]{\"1\",\"2\"};";
+		String testCase = "//@ [ collection := myArray=>\\collect(String a; a.length() > 0) ]";
+		assertEquals("",testUtilities.runChecker(setUp,testCase));
+		
+		testCase = "//@ [ s1 := myArray=>\\collect(String a; a.length() > 0) ]";
+		assertEquals("Semantic Error: cannot assign s1 of type java.lang.String a value of type AST.CJCollection<java.lang.String>",testUtilities.runChecker(setUp,testCase));
+	}
+	
+	/** Test exists operator. */
+	@Test
+	public void testTypeChecking33() {
+		String setUp =  "String s1; \n" +
+					    "boolean b; \n" +
+						"String[] myArray = new String[]{\"1\",\"2\"};";
+		String testCase = "//@ [ s1 := myArray=>\\exists(String a; a.length() > 0) ]";
+		assertEquals("Semantic Error: cannot assign s1 of type java.lang.String a value of type boolean",testUtilities.runChecker(setUp,testCase));
+	
+		testCase = "//@ [ b := myArray=>\\exists(String a; a) ]";
+		assertEquals("Semantic Error: B2 expression must be a boolean expression",testUtilities.runChecker(setUp,testCase));
+	}
 
+	/** Test for all operator. */
+	@Test
+	public void testTypeChecking34() {
+		String setUp = "String s1; \n" +
+					   "boolean b; \n" +
+					   "String[] myArray = new String[]{\"1\",\"2\"};";
+		String testCase = "//@ [ s1 := myArray=>\\forAll(String a; a.length() > 0) ]";
+		assertEquals("Semantic Error: cannot assign s1 of type java.lang.String a value of type boolean",testUtilities.runChecker(setUp,testCase));
+	
+		testCase = "//@ [ b := myArray=>\\forAll(String a; a) ]";
+		assertEquals("Semantic Error: B2 expression must be a boolean expression",testUtilities.runChecker(setUp,testCase));
+	}
+	
+	/** Test isUnique operator. */
+	@Test
+	public void testTypeChecking35() {
+		String setUp = "String s1; \n" +
+					   "String[] myArray = new String[]{\"1\",\"2\"};";
+		String testCase = "//@ [ s1 := myArray=>\\isUnique(String a; a.length() > 0) ]";
+		assertEquals("Semantic Error: cannot assign s1 of type java.lang.String a value of type boolean",testUtilities.runChecker(setUp,testCase));
+	}
+	
+	/** Test one operator. */
+	@Test
+	public void testTypeChecking36() {
+		String setUp = "String s1; \n" +
+					   "boolean b; \n" +
+					   "String[] myArray = new String[]{\"1\",\"2\"};";
+		String testCase = "//@ [ s1 := myArray=>\\one(String a; a.length() > 0) ]";
+		assertEquals("Semantic Error: cannot assign s1 of type java.lang.String a value of type boolean",testUtilities.runChecker(setUp,testCase));
+	
+		testCase = "//@ [ b := myArray=>\\one(String a; a) ]";
+		assertEquals("Semantic Error: B2 expression must be a boolean expression",testUtilities.runChecker(setUp,testCase));
+	}
+	
+	/** Test reject operator. */
+	@Test
+	public void testTypeChecking37() {
+		String setUp =  "String s1; \n" +
+						"AST.CJCollection<String> collection = new AST.CJSet<String>(); \n" +
+						"String[] myArray = new String[]{\"1\",\"2\"};";
+		String testCase = "//@ [ collection := myArray=>\\reject(String a; a.length() > 0) ]";
+		assertEquals("",testUtilities.runChecker(setUp,testCase));
+		
+		testCase = "//@ [ collection := myArray=>\\reject(String a; a) ]";
+		assertEquals("Semantic Error: B2 expression must be a boolean expression",testUtilities.runChecker(setUp,testCase));
+		
+		testCase = "//@ [ s1 := myArray=>\\reject(String a; a.length() > 0) ]";
+		assertEquals("Semantic Error: cannot assign s1 of type java.lang.String a value of type AST.CJCollection<java.lang.String>",testUtilities.runChecker(setUp,testCase));
+	}
+	
+	/** Test select operator. */
+	@Test
+	public void testTypeChecking38() {
+		String setUp =  "String s1; \n" +
+						"AST.CJCollection<String> collection = new AST.CJSet<String>(); \n" +
+						"String[] myArray = new String[]{\"1\",\"2\"};";
+		String testCase = "//@ [ collection := myArray=>\\select(String a; a.length() > 0) ]";
+		assertEquals("",testUtilities.runChecker(setUp,testCase));
+	
+		testCase = "//@ [ collection := myArray=>\\select(String a; a) ]";
+		assertEquals("Semantic Error: B2 expression must be a boolean expression",testUtilities.runChecker(setUp,testCase));
+		
+		testCase = "//@ [ s1 := myArray=>\\select(String a; a.length() > 0) ]";
+		assertEquals("Semantic Error: cannot assign s1 of type java.lang.String a value of type AST.CJCollection<java.lang.String>",testUtilities.runChecker(setUp,testCase));
+	}
+	
 }

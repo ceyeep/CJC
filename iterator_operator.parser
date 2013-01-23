@@ -1,4 +1,4 @@
-// Iterators
+// Operate Iterators
 
 Expr primary_no_new_array =
 	iterate_operator_access.o  {: return o; :}
@@ -6,10 +6,17 @@ Expr primary_no_new_array =
 
 Access iterate_operator_access =
 	iterate_operator_caller.c ITERATEOP  iterate_operator_body.b {: return new IterateOperator(c, ITERATEOP, b);  :}
-	iterate_operator_caller.c ANYOP  iterate_operator_body.b {: return new AnyOperator(c, ANYOP, b);  :}
-	//TODO: check complete implementation of method_invoctation in GenericMethods.parser in JastAddJ 5
+  |	iterate_operator_caller.c ANYOP  iterate_operator_body.b {: return new AnyOperator(c, ANYOP, b);  :}
+  |	iterate_operator_caller.c COLLECTOP  iterate_operator_body.b {: return new CollectorOperator(c, COLLECTOP, b);  :}
+  |	iterate_operator_caller.c EXISTSOP  iterate_operator_body.b {: return new ExistsOperator(c, EXISTSOP, b);  :}
+  |	iterate_operator_caller.c FORALLOP  iterate_operator_body.b {: return new ForAllOperator(c, FORALLOP, b);  :}
+  |	iterate_operator_caller.c ISUNIQUEOP  iterate_operator_body.b {: return new IsUniqueOperator(c, ISUNIQUEOP, b);  :}
+  |	iterate_operator_caller.c ONEOP  iterate_operator_body.b {: return new OneOperator(c, ONEOP, b);  :}
+  |	iterate_operator_caller.c REJECTOP  iterate_operator_body.b {: return new RejectOperator(c, REJECTOP, b);  :}
+  |	iterate_operator_caller.c SELECTOP  iterate_operator_body.b {: return new SelectOperator(c, SELECTOP, b);  :}
   ;
-  
+
+//TODO: check complete implementation of method_invoctation in GenericMethods.parser in JastAddJ 5
 Expr iterate_operator_caller =
 	primary.p ITERATORACCESS {: return p; :}
   |	name.n ITERATORACCESS 	 {: return n; :}

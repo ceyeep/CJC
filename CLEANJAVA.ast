@@ -64,10 +64,24 @@ AnythingLiteral:Literal;
 
 abstract AbstractIterateOperator:Access ::= Caller:Expr <Operator:String> Body:IterateOperatorBody;
 
-IterateOperator:AbstractIterateOperator;
-
 IterateOperatorBody ::= Iterator:ParameterDeclaration [Accumulator:ParameterDeclarationWithExpression] [Bool:Expr] Arg:Expr;
 
 ParameterDeclarationWithExpression:ParameterDeclaration ::= Expr;
 
+IterateOperator:AbstractIterateOperator;
+
 AnyOperator:AbstractIterateOperator;
+
+CollectorOperator:AbstractIterateOperator;
+
+ExistsOperator:AbstractIterateOperator;
+
+ForAllOperator:AbstractIterateOperator;
+
+IsUniqueOperator:AbstractIterateOperator;
+
+OneOperator:AbstractIterateOperator;
+
+RejectOperator:AbstractIterateOperator;
+
+SelectOperator:AbstractIterateOperator;

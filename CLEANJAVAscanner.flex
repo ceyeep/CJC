@@ -190,18 +190,24 @@
   "@="							{ return sym(Terminals.CJREFEQ); }
   "->"							{ return sym(Terminals.THEN); }
   "\\else"						{ return sym(Terminals.CJELSE); }
-  "=>"							{ return sym(Terminals.ITERATORACCESS); }
   "\\add"						{ return sym(Terminals.CJADD); }
+  "=>"							{ return sym(Terminals.ITERATORACCESS); }
+  "="                           { return sym(Terminals.ITEQ); }
   
   // CLEANJAVA Special symbols
   "\\result"					{ return sym(Terminals.CJRESULT); }
   "\\I"						   	{ return sym(Terminals.IDENTITY); }
    
   // CLEANJAVA Iterate Operators
-  "\\iterate"					{ return sym(Terminals.ITERATEOP); }
-  "="                           { return sym(Terminals.ITEQ); }
-  "\\any"						{ return sym(Terminals.ANYOP); }
-
+  "\\iterate"						{ return sym(Terminals.ITERATEOP); }
+  "\\any"							{ return sym(Terminals.ANYOP); }
+  "\\collect"						{ return sym(Terminals.COLLECTOP); }
+  "\\exists"						{ return sym(Terminals.EXISTSOP); }
+  "\\forAll"						{ return sym(Terminals.FORALLOP); }
+  "\\isUnique"						{ return sym(Terminals.ISUNIQUEOP); }
+  "\\one"							{ return sym(Terminals.ONEOP); }
+  "\\reject"						{ return sym(Terminals.REJECTOP); }
+  "\\select"						{ return sym(Terminals.SELECTOP); }
   }
 
 

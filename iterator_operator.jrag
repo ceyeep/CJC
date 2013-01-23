@@ -118,14 +118,32 @@ aspect IteratorOperator {
   
 	eq IterateOperator.type() = getBody().getAccumulator().getTypeAccess().type();
 	eq AnyOperator.type() = getBody().getIterator().getTypeAccess().type();
+	eq CollectorOperator.type() {
+	    ArrayList args = new ArrayList();
+        args.add(getBody().getIterator().getTypeAccess().type());
+		return ((GenericClassDecl)lookupType("AST", "CJCollection")).lookupParTypeDecl(args);
+	}		
+	eq ExistsOperator.type() = typeBoolean(); 
+	eq ForAllOperator.type() = typeBoolean(); 
+	eq IsUniqueOperator.type() = typeBoolean(); 
+	eq OneOperator.type() = typeBoolean();
+	eq RejectOperator.type() {
+	    ArrayList args = new ArrayList();
+        args.add(getBody().getIterator().getTypeAccess().type());
+		return ((GenericClassDecl)lookupType("AST", "CJCollection")).lookupParTypeDecl(args);
+	}	
+	eq SelectOperator.type() {
+	    ArrayList args = new ArrayList();
+        args.add(getBody().getIterator().getTypeAccess().type());
+		return ((GenericClassDecl)lookupType("AST", "CJCollection")).lookupParTypeDecl(args);
+	}	
 	
   //Type checking
   
-	public void AbstractIterateOperator.typeCheck() {
+	public void AbstractIterateOperator.typeCheck() {	
 		//Check that caller expression is of type Array or Iterable
 		if(!getCaller().type().isIterable() &&  !getCaller().type().isArrayDecl())
-			error("type " + getCaller().type().name() + 
-			      " of caller expression is neither array type nor java.lang.Iterable");
+			error("type " + getCaller().type().name() + " of caller expression is neither array type nor java.lang.Iterable");
 				  
 		else if(getCaller().type().isArrayDecl() && !getCaller().type().componentType().assignConversionTo(getBody().getIterator().type(), null))
 			error("iterator variable of type " + getBody().getIterator().type().typeName() + " cannot be assigned an element of type " + getCaller().type().componentType().typeName()); 
@@ -153,7 +171,37 @@ aspect IteratorOperator {
 
 	public void AnyOperator.typeCheck() {
 		super.typeCheck();
-		if(!getBody().getArg().type().assignConversionTo(getBody().getArg().typeBoolean(), getBody().getArg()))
+		if(!getBody().getArg().type().isBoolean())
+			error("B2 expression must be a boolean expression");
+	}
+	
+	public void ExistsOperator.typeCheck() {
+		super.typeCheck();
+		if(!getBody().getArg().type().isBoolean())
+			error("B2 expression must be a boolean expression");
+	}
+	
+	public void ForAllOperator.typeCheck() {
+		super.typeCheck();
+		if(!getBody().getArg().type().isBoolean())
+			error("B2 expression must be a boolean expression");
+	}
+	
+	public void OneOperator.typeCheck() {
+		super.typeCheck();
+		if(!getBody().getArg().type().isBoolean())
+			error("B2 expression must be a boolean expression");
+	}
+	
+	public void RejectOperator.typeCheck() {
+		super.typeCheck();
+		if(!getBody().getArg().type().isBoolean())
+			error("B2 expression must be a boolean expression");
+	}
+	
+	public void SelectOperator.typeCheck() {
+		super.typeCheck();
+		if(!getBody().getArg().type().isBoolean())
 			error("B2 expression must be a boolean expression");
 	}
 }
