@@ -161,19 +161,19 @@ public class TestFile{
 	public void conditionalConcurrentAssignment(){}
 	
   //Splitting definition of a simple concurrent assignment
-	/*@ [ x := 3 \add
-		  y := 4 \add
+	/*@ [ x := 3 \,
+		  y := 4 \,
 		  z := 5 ] @*/
 	public void splittingDefinitionSimpleConcurrentAssignment(){}
 	
   //Splitting definition of a simple concurrent assignment with
   //referential semantics
- 	/*@ [ o1 @= o2 \add
+ 	/*@ [ o1 @= o2 \,
 		  o2 @= o1 ] @*/
 	public void splittingDefinitionSimpleConcurrentAssignmentReferential(){}   
 	
-	/*@ [x < 0 -> y := -1 \add
-		 x == 0 -> y := 0 \add
+	/*@ [x < 0 -> y := -1 \,
+		 x == 0 -> y := 0 \,
 		 x > 0 -> y := 1 ] @*/
 	public void nonDeterministicConditionalConcurrentAssignment(){}
 	

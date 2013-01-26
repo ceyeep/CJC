@@ -190,7 +190,7 @@
   "@="							{ return sym(Terminals.CJREFEQ); }
   "->"							{ return sym(Terminals.THEN); }
   "\\else"						{ return sym(Terminals.CJELSE); }
-  "\\add"						{ return sym(Terminals.CJADD); }
+  "\\,"							{ return sym(Terminals.CJCOMMA); }
   "=>"							{ return sym(Terminals.ITERATORACCESS); }
   "="                           { return sym(Terminals.ITEQ); }
   

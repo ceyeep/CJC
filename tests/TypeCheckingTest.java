@@ -280,7 +280,7 @@ public class TypeCheckingTest {
 	@Test
 	public void testTypeChecking28() {
 		String setUp = "int x, y, z;";
-		String testCase = "//@ [ x := 1 \\add y := 1 \\add z := 1 ]";
+		String testCase = "//@ [ x := 1 \\, y := 1 \\, z := 1 ]";
 		assertEquals("",testUtilities.runChecker(setUp,testCase));
 	}
 	
@@ -288,7 +288,7 @@ public class TypeCheckingTest {
 	@Test
 	public void testTypeChecking29() {
 		String setUp = "String a = \"hi\", b, c;";
-		String testCase = "//@ [ b @= a \\add c @= a ]";
+		String testCase = "//@ [ b @= a \\, c @= a ]";
 		assertEquals("",testUtilities.runChecker(setUp,testCase));
 	}
 	
@@ -296,7 +296,7 @@ public class TypeCheckingTest {
 	@Test
 	public void testTypeChecking30() {
 		String setUp = "String a, b;";
-		String testCase = "//@ [ b := \"hello\" \\add a @= b ]";
+		String testCase = "//@ [ b := \"hello\" \\, a @= b ]";
 		assertEquals("Semantic Error: incorrect use of splitting definitions; you must use the same type of equality tests (e.g. referential semantics or value semantics)",testUtilities.runChecker(setUp,testCase));
 	}
 	

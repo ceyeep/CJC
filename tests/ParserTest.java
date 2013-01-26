@@ -212,19 +212,19 @@ public class ParserTest {
 	/** Test splitting definitions with simple concurrent assingment. */
 	@Test
 	public void testParser24() {
-		assertParseOk("//@ [ x := 3 \\add y := 4 ]");
+		assertParseOk("//@ [ x := 3 \\, y := 4 ]");
 	}
 	
 	/** Test splitting definitions with simple concurrent assingment and referential semantics. */
 	@Test
 	public void testParser25() {
-		assertParseOk("//@ [ x @= 3 \\add y @= 4 \\add z @= 5 ]");
+		assertParseOk("//@ [ x @= 3 \\, y @= 4 \\, z @= 5 ]");
 	}
 	
 	/** Test non-deterministic conditional concurrent assignment. */
 	@Test
 	public void testParser26() {
-		assertParseOk("//@ [ x > 0 -> y := 3 \\add x == 0 -> y := 2 \\add x < 0 -> y := 4 ]");
+		assertParseOk("//@ [ x > 0 -> y := 3 \\, x == 0 -> y := 2 \\, x < 0 -> y := 4 ]");
 	}
 	
 	/** Test sequential composition of conditional concurrent assignments. */
@@ -236,7 +236,7 @@ public class ParserTest {
 	/** Test conditional concurrent assignment with mixed types. */
 	@Test
 	public void testParser28() {
-		assertParseOk("//@ [ x > 0 -> x := 3 \\add x < 0 -> x := 2; x == 0 -> x := y \\else x := 1 ]");
+		assertParseOk("//@ [ x > 0 -> x := 3 \\, x < 0 -> x := 2; x == 0 -> x := y \\else x := 1 ]");
 	}
 	
 	/** Test identity function. */
@@ -244,13 +244,12 @@ public class ParserTest {
 	public void testParser29() {
 		assertParseOk("//@ [ \\I ]");
 	}
-
+	
 	/** Test combined definitions. */
 	@Test
-	public void testParserFail10() {
-		assertParseOk("//@ [ x > 0 -> x := 1 \\add x < 0 -> x := 0; z := 1 \\add y := 1; \\I ]");
+	public void testParser30() {
+		assertParseOk("//@ [ x > 0 -> x := 1 \\, x < 0 -> x := 0; z := 1 \\, y := 1; \\I ]");
 	}
-	
 
 	//TEST PARSER FAILS
 	
@@ -311,8 +310,9 @@ public class ParserTest {
 	/** Test non-deterministic conditional concurrent assignment with a final else syntactic sugar. */
 	@Test
 	public void testParserFail09() {
-		assertParseError("//@ [ x > 0 -> x := 1 \\add x := 1 ]");
+		assertParseError("//@ [ x > 0 -> x := 1 \\, x := 1 ]");
 	}
+	
 			
 	//Utility methods
 	
