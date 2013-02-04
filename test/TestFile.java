@@ -152,14 +152,6 @@ public class TestFile{
 		// o1 = o2.clone(); with a clone() implementation
 	}
 	
-  //Conditional concurrent assignment
-	/*@ 
-	   [ x > 0 -> y := 1
-	    \else x < 0 -> y := -1 
-	    \else \I ] //Do nothing. Original program state.
-	 @*/
-	public void conditionalConcurrentAssignment(){}
-	
   //Splitting definition of a simple concurrent assignment
 	/*@ [ x := 3 \,
 		  y := 4 \,
@@ -170,13 +162,32 @@ public class TestFile{
   //referential semantics
  	/*@ [ o1 @= o2 \,
 		  o2 @= o1 ] @*/
-	public void splittingDefinitionSimpleConcurrentAssignmentReferential(){}   
+	public void splittingDefinitionSimpleConcurrentAssignmentReferential(){}  
 	
-	/*@ [x < 0 -> y := -1 \,
-		 x == 0 -> y := 0 \,
-		 x > 0 -> y := 1 ] @*/
+  //Conditional concurrent assignment
+	/*@ 
+	   [ x > 0 -> y := 1 \else 
+	     x < 0 -> y := -1 \else 
+		 \I ] //Do nothing. Original program state.
+	 @*/
+	public void conditionalConcurrentAssignment(){}
+	
+  //Non-deterministic conditional concurrent assignment
+	/*@ [x < 0 -> y := -1 \nelse
+		 x == 0 -> y := 0 \nelse
+		 x == 0 -> y := 1 ] @*/
 	public void nonDeterministicConditionalConcurrentAssignment(){}
 	
+  //Conditional concurrent assignment with splitted definition
+	/*@ [ x > 0 -> x := 1 \, 
+				   y := 2 \,
+				   z := 3 \else
+		  x < 0 -> x := 0 \else
+	      \I] 
+    @*/	
+	public void conditionalConcurrentAssignmentWithSplittedDefinition(){}
+
+  //Sequential composition	
 	/*@ [x < 0 -> y := -1 ;
 	 x == 0 -> y := 0 ;
 	 x > 0 -> y := 1 ] @*/

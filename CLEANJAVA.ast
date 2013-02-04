@@ -30,11 +30,11 @@ abstract CJStmt;
 
 CombinedDefinition:CJStmt ::= Definition:CJStmt*;
 
-SplittedDefinition:CJStmt ::= Assignment:SimpleConcurrentAssignment*;
-
 abstract AbstractConcurrentAssignment:CJStmt;
 
 abstract AbstractSimpleConcurrentAssignment:AbstractConcurrentAssignment;
+
+SplittedDefinition:AbstractSimpleConcurrentAssignment ::= Assignment:SimpleConcurrentAssignment*;
 
 SimpleConcurrentAssignment:AbstractSimpleConcurrentAssignment ::= Dest:Expr* Source:Expr*;
 
