@@ -36,7 +36,7 @@ abstract AbstractSimpleConcurrentAssignment:AbstractConcurrentAssignment;
 
 SplittedDefinition:AbstractSimpleConcurrentAssignment ::= Assignment:SimpleConcurrentAssignment*;
 
-SimpleConcurrentAssignment:AbstractSimpleConcurrentAssignment ::= Dest:Expr* Source:Expr*;
+SimpleConcurrentAssignment:AbstractSimpleConcurrentAssignment ::= Location:Expr* Value:Expr*;
 
 SimpleConcurrentAssignmentByRef:SimpleConcurrentAssignment;
 

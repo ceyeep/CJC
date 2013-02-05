@@ -60,18 +60,18 @@ aspect CleanJavaStatement {
 	}
 	
 	public void SimpleConcurrentAssignment.toString(StringBuffer s) {
-		for(int i = 0; i < getNumDest(); i++) {
+		for(int i = 0; i < getNumLocation(); i++) {
 			if(i != 0)
 				s.append(", ");
-			getDest(i).toString(s);
+			getLocation(i).toString(s);
 		}
 		
 		s.append(printOp());
 
-		for(int i = 0; i < getNumSource(); i++) {
+		for(int i = 0; i < getNumValue(); i++) {
 			if(i != 0)
 				s.append(", ");
-			getSource(i).toString(s);
+			getValue(i).toString(s);
 		}
 	}
 	
@@ -111,29 +111,29 @@ aspect CleanJavaStatement {
 	/** Perform type checking in a simple concurrent assignment. */
 	public void SimpleConcurrentAssignment.typeCheck() {
 		//Check if equation is balanced
-		if(getNumDest() != getNumSource()) {
+		if(getNumLocation() != getNumValue()) {
 			error("concurrent assignment is unbalanced");
 		}
 		else{
 			ArrayList<String> variables = new ArrayList<String>();
 			ArrayList<String> duplicates = new ArrayList<String>();
-			for(int i = 0; i < getNumDest(); i++) {
-				Expr dest = getDest(i);
-				Expr source = getSource(i);
+			for(int i = 0; i < getNumLocation(); i++) {
+				Expr loc = getLocation(i);
+				Expr value = getValue(i);
 				
 				//Check assignment compatiblity
-				checkAssignmentCompatiblity(dest,source);
+				checkAssignmentCompatiblity(loc,value);
 				
 				//If node is not a CJResult get var decl name
-				if(dest.isVariable()){
-					String name = dest.varDecl().name();
+				if(loc.isVariable()){
+					String name = loc.varDecl().name();
 					if(!variables.contains(name))
 						variables.add(name);
 					else
 						if(!duplicates.contains(name))
 							duplicates.add(name);
 				}
-				else if(dest.isCJResult()){
+				else if(loc.isCJResult()){
 					if(!variables.contains("\\result"))
 						variables.add("\\result");
 					else
@@ -149,26 +149,26 @@ aspect CleanJavaStatement {
 	}
 	
 	/** Check assignment compatiblity for simple concurrent assignments. */
-	public void SimpleConcurrentAssignment.checkAssignmentCompatiblity(Expr dest, Expr source){
-		if(!dest.isVariable() && !dest.isCJResult())
-			error(dest+" is not a variable");
-		else if(!source.type().assignConversionTo(dest.type(), source) && !source.type().isUnknown())
-			error("cannot assign " + dest + " of type " + dest.type().typeName() +
-				" a value of type " + source.type().typeName());
-		else if(dest.isCJResult() && containingCJMethodDecl() == null)
+	public void SimpleConcurrentAssignment.checkAssignmentCompatiblity(Expr loc, Expr value){
+		if(!loc.isVariable() && !loc.isCJResult())
+			error(loc+" is not a variable");
+		else if(!value.type().assignConversionTo(loc.type(), value) && !value.type().isUnknown())
+			error("cannot assign " + loc + " of type " + loc.type().typeName() +
+				" a value of type " + value.type().typeName());
+		else if(loc.isCJResult() && containingCJMethodDecl() == null)
 			error("incorrect use of \\result, \\result must be used within a method declaration");
 	}
 	
 	/** Check assignment compatiblity for simple concurrent assignments by reference. */
-	public void SimpleConcurrentAssignmentByRef.checkAssignmentCompatiblity(Expr dest, Expr source){
-		if(!dest.isVariable() && !dest.isCJResult())
-			error(dest+" is not a variable");
-		else if(dest.type().isPrimitive())
-			error("cannot use " + dest + " of primitive "+dest.type()+" type using referential semantics"); 
-		else if(!source.type().assignConversionTo(dest.type(), source) && !source.type().isUnknown())
-			error("cannot assign " + dest + " of type " + dest.type().typeName() +
-				" a value of type " + source.type().typeName());
-		else if(dest.isCJResult() && containingCJMethodDecl() == null)
+	public void SimpleConcurrentAssignmentByRef.checkAssignmentCompatiblity(Expr loc, Expr value){
+		if(!loc.isVariable() && !loc.isCJResult())
+			error(loc+" is not a variable");
+		else if(loc.type().isPrimitive())
+			error("cannot use " + loc + " of primitive "+loc.type()+" type using referential semantics"); 
+		else if(!value.type().assignConversionTo(loc.type(), value) && !value.type().isUnknown())
+			error("cannot assign " + loc + " of type " + loc.type().typeName() +
+				" a value of type " + value.type().typeName());
+		else if(loc.isCJResult() && containingCJMethodDecl() == null)
 			error("incorrect use of \\result, \\result must be used within a method declaration");
 	}
 		
@@ -202,12 +202,12 @@ aspect CleanJavaStatement {
 				SimpleConcurrentAssignment simpleConcurrentAssignment = getAssignment(i);
 				if(simpleConcurrentAssignment instanceof SimpleConcurrentAssignmentByRef)
 					referential++;
-				//Iterate over simple concurrent assignment destinations
-				for(int j = 0; j < simpleConcurrentAssignment.getNumDest(); j++)
-					leftHandExprList.add(simpleConcurrentAssignment.getDest(j));
-				//Iterate over simple concurrent assignment sources
-				for(int j = 0; j < simpleConcurrentAssignment.getNumSource(); j++)
-					rightHandExprList.add(simpleConcurrentAssignment.getSource(j));	
+				//Iterate over simple concurrent assignment locations
+				for(int j = 0; j < simpleConcurrentAssignment.getNumLocation(); j++)
+					leftHandExprList.add(simpleConcurrentAssignment.getLocation(j));
+				//Iterate over simple concurrent assignment values
+				for(int j = 0; j < simpleConcurrentAssignment.getNumValue(); j++)
+					rightHandExprList.add(simpleConcurrentAssignment.getValue(j));	
 		}
 		//Check if splitted definition has different definition semantics
 		if(referential > 0 && referential < getNumAssignment() )

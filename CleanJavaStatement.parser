@@ -25,8 +25,8 @@ List splitted_definition =
   ;
 
 SimpleConcurrentAssignment simple_concurrent_assignment =
-	postfix_expression_list.dest CJEQ assignment_expression_list.source 	{: return new SimpleConcurrentAssignment(dest,source); :}
-  |	postfix_expression_list.dest CJREFEQ assignment_expression_list.source 	{: return new SimpleConcurrentAssignmentByRef(dest,source); :}
+	postfix_expression_list.loc CJEQ assignment_expression_list.value 	{: return new SimpleConcurrentAssignment(loc,value); :}
+  |	postfix_expression_list.loc CJREFEQ assignment_expression_list.value 	{: return new SimpleConcurrentAssignmentByRef(loc,value); :}
   ;
 
 List postfix_expression_list =
