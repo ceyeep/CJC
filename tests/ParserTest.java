@@ -232,28 +232,22 @@ public class ParserTest {
 	public void testParser27() {
 		assertParseOk("//@ [ x > 0 -> y := 3; x == 0 -> y := 2; x < 0 -> y := 4 ]");
 	}
-	
-	/** Test conditional concurrent assignment with mixed types. */
-	@Test
-	public void testParser28() {
-		assertParseOk("//@ [ x > 0 -> x := 3 \\nelse x < 0 -> x := 2; x == 0 -> x := y \\else x := 1 ]");
-	}
-	
+		
 	/** Test identity function. */
 	@Test
-	public void testParser29() {
+	public void testParser28() {
 		assertParseOk("//@ [ \\I ]");
 	}
 	
 	/** Test combined definitions. */
 	@Test
-	public void testParser30() {
+	public void testParser29() {
 		assertParseOk("//@ [ x > 0 -> x := 1 \\nelse x < 0 -> x := 0; z := 1 \\, y := 1; \\I ]");
 	}
 	
 	/** Test conditional concurrent assignment with splitted definition. */
 	@Test
-	public void testParser31() {
+	public void testParser30() {
 		assertParseOk("//@ [ x > 0 -> x := 0 \\, y := 1 \\, z := 2 \\else \\I ]");
 	}
 

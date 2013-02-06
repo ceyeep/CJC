@@ -28,7 +28,7 @@ CJBlock:Block ::= Spec:CJStmt;
 
 abstract CJStmt;
 
-CombinedDefinition:CJStmt ::= Definition:CJStmt*;
+CombinedDefinition:CJStmt ::= Definition:AbstractConcurrentAssignment*;
 
 abstract AbstractConcurrentAssignment:CJStmt;
 
@@ -42,11 +42,11 @@ SimpleConcurrentAssignmentByRef:SimpleConcurrentAssignment;
 
 Identity:AbstractSimpleConcurrentAssignment ;
 
-CondConcurrentAssignment:AbstractConcurrentAssignment ::= ConditionalAssignment:SingleCondConcurrentAssignment* [Else:AbstractSimpleConcurrentAssignment];
+abstract AbstractCondConcurrentAssignment:AbstractConcurrentAssignment ::= Pair:ExprAndAbstractSimpleConcurrentAssignment*;
 
-SingleCondConcurrentAssignment ::= Pair:ExprAndAbstractSimpleConcurrentAssignment;
+CondConcurrentAssignment:AbstractCondConcurrentAssignment ::= [Else:AbstractSimpleConcurrentAssignment];
 
-SingleNDCondConcurrentAssignment:SingleCondConcurrentAssignment;
+NDCondConcurrentAssignment:AbstractCondConcurrentAssignment;
 
 ExprAndAbstractSimpleConcurrentAssignment ::= Condition:Expr Then:AbstractSimpleConcurrentAssignment;
 

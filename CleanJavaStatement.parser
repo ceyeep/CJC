@@ -8,24 +8,23 @@ List intended_function_list =
   |	intended_function_list.l SEMICOLON intended_function.e 	{: return l.add(e); :}
   ;
   
-CJStmt intended_function =
-	abstract_simple_concurrent_assignment.a {: return a; :}
-  | conditional_concurrent_assignment.c	{: return c; :}
+AbstractConcurrentAssignment intended_function =
+	abstract_simple_concurrent_assignment.a 		{: return a; :}
+  | abstract_conditional_concurrent_assignment.c	{: return c; :}
   ;
     
 AbstractSimpleConcurrentAssignment abstract_simple_concurrent_assignment = 
 	splitted_definition.l				{: return new SplittedDefinition(l); :}
-	//simple_concurrent_assignment.a		{: return a; :}
   |	IDENTITY        					{: return new Identity(); :}
   ;
   
 List splitted_definition =
-    simple_concurrent_assignment.e                             {: return new List().add(e); :}
-  |	splitted_definition.l CJCOMMA simple_concurrent_assignment.e {: return l.add(e); :}
+    simple_concurrent_assignment.e                             		{: return new List().add(e); :}
+  |	splitted_definition.l CJCOMMA simple_concurrent_assignment.e 	{: return l.add(e); :}
   ;
 
 SimpleConcurrentAssignment simple_concurrent_assignment =
-	postfix_expression_list.loc CJEQ assignment_expression_list.value 	{: return new SimpleConcurrentAssignment(loc,value); :}
+	postfix_expression_list.loc CJEQ assignment_expression_list.value 		{: return new SimpleConcurrentAssignment(loc,value); :}
   |	postfix_expression_list.loc CJREFEQ assignment_expression_list.value 	{: return new SimpleConcurrentAssignmentByRef(loc,value); :}
   ;
 
@@ -39,16 +38,37 @@ List assignment_expression_list =
   |	assignment_expression_list.l COMMA assignment_expression.e 	{: return l.add(e); :}
   ;
 
-CondConcurrentAssignment conditional_concurrent_assignment =
-	conditional_assignment_list.l 													{: return new CondConcurrentAssignment(l,  new Opt()); :}
-  |	conditional_assignment_list.l CJELSE  abstract_simple_concurrent_assignment.els {: return new CondConcurrentAssignment(l, new Opt(els)); :} 
+AbstractCondConcurrentAssignment abstract_conditional_concurrent_assignment =
+	expression_and_abstract_simple_concurrent_assignment.e  conditional_otherwise.els?  {: return new CondConcurrentAssignment(new List().add(e), els); :} 
+  |	conditional_assignment_list.l  conditional_otherwise.els?							{: return new CondConcurrentAssignment(l, els); :}
+  |	nd_conditional_assignment_list.l													{: return new NDCondConcurrentAssignment(l); :} 
+  ;
+
+Opt conditional_otherwise =
+	CJELSE abstract_simple_concurrent_assignment.els	 {: return new Opt(els); :}
   ;
 
 List conditional_assignment_list =
-    expression_and_abstract_simple_concurrent_assignment.e     										{: return new List().add(new SingleCondConcurrentAssignment(e)); :}
-  |	conditional_assignment_list.l CJELSE expression_and_abstract_simple_concurrent_assignment.e 	{: return l.add(new SingleCondConcurrentAssignment(e)); :}
-  |	conditional_assignment_list.l CJNELSE expression_and_abstract_simple_concurrent_assignment.e 		{: return l.add(new SingleNDCondConcurrentAssignment(e)); :}
-  ;  
+	expression_and_abstract_simple_concurrent_assignment.a1 CJELSE expression_and_abstract_simple_concurrent_assignment.a2 
+	{: 
+		List list = new List();
+		list.add(a1);
+		list.add(a2);
+		return list; 
+	:} 
+  |	conditional_assignment_list.l CJELSE  expression_and_abstract_simple_concurrent_assignment.e {: return l.add(e); :}
+  ;
+  
+List nd_conditional_assignment_list =
+	expression_and_abstract_simple_concurrent_assignment.a1 CJNELSE expression_and_abstract_simple_concurrent_assignment.a2
+	{: 
+		List list = new List();
+		list.add(a1);
+		list.add(a2);
+		return list; 
+	:} 
+  |	nd_conditional_assignment_list.l CJNELSE  expression_and_abstract_simple_concurrent_assignment.e {: return l.add(e); :}
+  ;
   
 ExprAndAbstractSimpleConcurrentAssignment  expression_and_abstract_simple_concurrent_assignment =
 	expression.e THEN abstract_simple_concurrent_assignment.s  {: return new ExprAndAbstractSimpleConcurrentAssignment(e, s); :}

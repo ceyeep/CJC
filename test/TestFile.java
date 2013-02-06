@@ -64,18 +64,18 @@ public class TestFile{
 	
   //Multi-line annotation
 	/*@ 
-	   [ x == 0 -> y := 0
-	    \else x > 0 -> y := 1 
-	    \else x < 0 -> y := -1 ]
+	   [ x == 0 -> y := 0 \else 
+		 x > 0 -> y := 1  \else 
+		 x < 0 -> y := -1 ]
 	 @*/
 	public void multiLineAnnotation(){}
 	
   //Comment inside of an annotation
 	/*@ 
 	   // This is a traditional single-line Java comment
-	   [ x == 0 -> y := 0
-	    \else x > 0 -> y := 1 
-	    \else x < 0 -> y := -1 ]
+	   [ x == 0 -> y := 0 \else 
+	     x > 0 -> y := 1  \else 
+		 x < 0 -> y := -1 ]
 	 @*/
 	public void commentInsideAnnotation(){}
 	

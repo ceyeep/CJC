@@ -27,17 +27,17 @@ aspect CleanJavaStatement {
   // Unreachable Statements (see UnreachableStatements.jrag)
 
 	eq CJStaticInitializer.getSpec().reachable() = true;
-	eq CJInstanceInitializer.getSpec().reachable()  = true; 
-	eq CJMethodDecl.getSpec().reachable()        = true;
-	eq CJConstructorDecl.getSpec().reachable()   = true;
+	eq CJInstanceInitializer.getSpec().reachable() = true; 
+	eq CJMethodDecl.getSpec().reachable() = true;
+	eq CJConstructorDecl.getSpec().reachable() = true;
 
 
   // Pretty printer
 	
 	syn String SimpleConcurrentAssignment.printOp() = " := ";
 	syn String SimpleConcurrentAssignmentByRef.printOp() = " @= ";
-	syn String SingleCondConcurrentAssignment.printOp() = " | ";
-	syn String SingleNDCondConcurrentAssignment.printOp() = " , ";
+	syn String AbstractCondConcurrentAssignment.printOp() = " | ";
+	syn String NDCondConcurrentAssignment.printOp() = " , ";
 
 	public void CombinedDefinition.toString(StringBuffer s) {
 		for(int i = 0; i < getNumDefinition(); i++) {
@@ -75,27 +75,28 @@ aspect CleanJavaStatement {
 		}
 	}
 	
-	public void CondConcurrentAssignment.toString(StringBuffer s) {
-		int assignments = getNumConditionalAssignment();
-		for(int i = 0; i < assignments; i++) {
-			if(i > 0 && i < assignments) {
-				s.append(getConditionalAssignment(i).printOp());
+	public void AbstractCondConcurrentAssignment.toString(StringBuffer s) {
+		int pairs = getNumPair();
+
+		for(int i = 0; i < pairs; i++) {
+			if(i > 0 && i < pairs) {
+				s.append(printOp());
 				s.append(indent());
 			}
-			getConditionalAssignment(i).toString(s);
+			getPair(i).toString(s);
 		}
+	}
+	
+	public void CondConcurrentAssignment.toString(StringBuffer s) {
+		super.toString(s);
 		if(hasElse()){
-			s.append(" |");
+			s.append(printOp());
 			s.append(indent());
 			s.append("otherwise -> ");
 			getElse().toString(s);
 		}
 	}
-	
-	public void SingleCondConcurrentAssignment.toString(StringBuffer s){
-		getPair().toString(s);
-	}
-		
+			
 	public void ExprAndAbstractSimpleConcurrentAssignment.toString(StringBuffer s) {
 		getCondition().toString(s);
 		s.append(" -> ");
