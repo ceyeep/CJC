@@ -1,9 +1,9 @@
 BodyDecl class_body_declaration =
-    combined_definition.s static_initializer.b          
+    intended_function.s static_initializer.b          
 	{: return new CJStaticInitializer(b.getBlock(), s); :}
-  | combined_definition.s instance_initializer.b        
+  | intended_function.s instance_initializer.b        
     {: return new CJInstanceInitializer(b.getBlock(), s); :}
-  |	combined_definition.s constructor_declaration.c {:
+  |	intended_function.s constructor_declaration.c {:
         return new CJConstructorDecl(c.getModifiers(),
 		c.getID(),
 		c.getParameterList(),
@@ -15,7 +15,7 @@ BodyDecl class_body_declaration =
   ;
 
 BodyDecl class_member_declaration =
-    combined_definition.s method_declaration.m {:
+    intended_function.s method_declaration.m {:
         return new CJMethodDecl(m.getModifiers(),
         m.getTypeAccess(),
         m.getID(),
@@ -27,7 +27,7 @@ BodyDecl class_member_declaration =
   ;
 
 Stmt statement_without_trailing_substatement =
-    combined_definition.s block.b{: 
+    intended_function.s block.b{: 
 		return new CJBlock(b.getStmts(),
 		s);
 	:}

@@ -28,7 +28,7 @@ CJBlock:Block ::= Spec:CJStmt;
 
 abstract CJStmt;
 
-CombinedDefinition:CJStmt ::= Definition:AbstractConcurrentAssignment*;
+IntendedFunction:CJStmt ::= Definition:AbstractConcurrentAssignment*;
 
 abstract AbstractConcurrentAssignment:CJStmt;
 

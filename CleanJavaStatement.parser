@@ -1,14 +1,14 @@
 
-CJStmt combined_definition =
-	START intended_function_list.l RBRACK {: return new CombinedDefinition(l); :}
+CJStmt intended_function =
+	START abstract_concurrent_assignment_list.l RBRACK {: return new IntendedFunction(l); :}
   ;
 
-List intended_function_list =
-    intended_function.e                                  	{: return new List().add(e); :}
-  |	intended_function_list.l SEMICOLON intended_function.e 	{: return l.add(e); :}
+List abstract_concurrent_assignment_list =
+    abstract_concurrent_assignment.e                                  		{: return new List().add(e); :}
+  |	abstract_concurrent_assignment_list.l SEMICOLON abstract_concurrent_assignment.e 	{: return l.add(e); :}
   ;
   
-AbstractConcurrentAssignment intended_function =
+AbstractConcurrentAssignment abstract_concurrent_assignment =
 	abstract_simple_concurrent_assignment.a 		{: return a; :}
   | abstract_conditional_concurrent_assignment.c	{: return c; :}
   ;
