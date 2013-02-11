@@ -245,7 +245,7 @@ public class ParserTest {
 		assertParseOk("//@ [ x > 0 -> x := 1 \\nelse x < 0 -> x := 0; z := 1 \\, y := 1; \\I ]");
 	}
 	
-	/** Test conditional concurrent assignment with splitted definition. */
+	/** Test conditional concurrent assignment with split definition. */
 	@Test
 	public void testParser30() {
 		assertParseOk("//@ [ x > 0 -> x := 0 \\, y := 1 \\, z := 2 \\else \\I ]");

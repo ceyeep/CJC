@@ -178,7 +178,7 @@ public class TestFile{
 		 x == 0 -> y := 1 ] @*/
 	public void nonDeterministicConditionalConcurrentAssignment(){}
 	
-  //Conditional concurrent assignment with splitted definition
+  //Conditional concurrent assignment with split definition
 	/*@ [ x > 0 -> x := 1 \, 
 				   y := 2 \,
 				   z := 3 \else

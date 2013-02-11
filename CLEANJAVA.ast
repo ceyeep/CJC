@@ -34,7 +34,7 @@ abstract AbstractConcurrentAssignment:CJStmt;
 
 abstract AbstractSimpleConcurrentAssignment:AbstractConcurrentAssignment;
 
-SplittedDefinition:AbstractSimpleConcurrentAssignment ::= Assignment:SimpleConcurrentAssignment*;
+SplitDefinition:AbstractSimpleConcurrentAssignment ::= Assignment:SimpleConcurrentAssignment*;
 
 SimpleConcurrentAssignment:AbstractSimpleConcurrentAssignment ::= Location:Expr* Value:Expr*;
 

@@ -276,7 +276,7 @@ public class TypeCheckingTest {
 		assertEquals("Semantic Error: E2 expression \"true\" in \\iterate operator must be of type int",testUtilities.runChecker(setUp,testCase));
 	}
 	
-	/** Test splitted definition with value semantics. */
+	/** Test split definition with value semantics. */
 	@Test
 	public void testTypeChecking28() {
 		String setUp = "int x, y, z;";
@@ -284,7 +284,7 @@ public class TypeCheckingTest {
 		assertEquals("",testUtilities.runChecker(setUp,testCase));
 	}
 	
-	/** Test splitted definition with referential semantics. */
+	/** Test split definition with referential semantics. */
 	@Test
 	public void testTypeChecking29() {
 		String setUp = "String a = \"hi\", b, c;";
@@ -292,7 +292,7 @@ public class TypeCheckingTest {
 		assertEquals("",testUtilities.runChecker(setUp,testCase));
 	}
 	
-	/** Test splitted definition with different semantics. */
+	/** Test split definition with different semantics. */
 	@Test
 	public void testTypeChecking30() {
 		String setUp = "String a, b;";

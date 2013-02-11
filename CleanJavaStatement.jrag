@@ -49,7 +49,7 @@ aspect CleanJavaStatement {
 		}
 	}
 	
-	public void SplittedDefinition.toString(StringBuffer s) {
+	public void SplitDefinition.toString(StringBuffer s) {
 		for(int i = 0; i < getNumAssignment(); i++) {
 			if(i != 0){
 				s.append(",");
@@ -188,13 +188,13 @@ aspect CleanJavaStatement {
 	
 	/** Type check creating a single SimpleConcurrentAssignment from
 		splitted definitions. */
-	public void SplittedDefinition.typeCheck() {
+	public void SplitDefinition.typeCheck() {
 		if(getNumAssignment() > 1)
 			createSimpleConcurrentAssignmentList();
 	}
 	
 	/** Merge lists of SimpleConcurrentAssignments into a single SimpleConcurrentAssignment. */
-	public void SplittedDefinition.createSimpleConcurrentAssignmentList(){
+	public void SplitDefinition.createSimpleConcurrentAssignmentList(){
 		int referential = 0;
 		List<Expr> leftHandExprList = new List<Expr>();
 		List<Expr> rightHandExprList = new List<Expr>();

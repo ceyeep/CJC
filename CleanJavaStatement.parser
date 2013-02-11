@@ -14,13 +14,13 @@ AbstractConcurrentAssignment abstract_concurrent_assignment =
   ;
     
 AbstractSimpleConcurrentAssignment abstract_simple_concurrent_assignment = 
-	splitted_definition.l				{: return new SplittedDefinition(l); :}
+	split_definition.l				{: return new SplitDefinition(l); :}
   |	IDENTITY        					{: return new Identity(); :}
   ;
   
-List splitted_definition =
+List split_definition =
     simple_concurrent_assignment.e                             		{: return new List().add(e); :}
-  |	splitted_definition.l CJCOMMA simple_concurrent_assignment.e 	{: return l.add(e); :}
+  |	split_definition.l CJCOMMA simple_concurrent_assignment.e 	{: return l.add(e); :}
   ;
 
 SimpleConcurrentAssignment simple_concurrent_assignment =
