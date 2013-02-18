@@ -38,7 +38,7 @@
 		<tstamp>
 			<format property="build.date" pattern="yyyyMMdd"/>
 		</tstamp>
-		<copy file="resources/JastAddJ.txt" toFile="JastAddJ.properties">
+		<copy file="resources/CJCResource.txt" toFile="CJC.properties">
 			<filterset>
 				<filter token="VERSION" value="R${build.date}"/>
 				<filter token="CJCBUILD" value="R${build.date}"/>
@@ -213,7 +213,7 @@
 		<delete file="JavaPrettyPrinter.jar"/>
 		<delete file="JavaDumpTree.jar"/>
 		<delete file="cjc-src.jar"/>
-		<delete file="JastAddJ.properties"/>
+		<delete file="CJC.properties"/>
 	</target>
 
 	<!-- remove generated source files -->

@@ -87,7 +87,7 @@ public class CleanJavaChecker extends Frontend {
 	
 	//Properties configuration from JastAddJ7
 	protected ResourceBundle resources = null;
-	protected String resourcename = "JastAddJ";
+	protected String resourcename = "CJC";
 	protected String getString(String key) {
 		if (resources == null) {
 			try {
@@ -125,8 +125,8 @@ public class CleanJavaChecker extends Frontend {
           );
     }
 
-	public String name() { return getString("cjc.Name"); }
-	public String longName() { return getString("cjc.LongName"); }
+	public String name() { return getString("cjc.CheckerName"); }
+	public String longName() { return getString("cjc.CheckerLongName"); }
 	public String version() { return getString("cjc.Version"); }
 	public String build() { return getString("cjc.Build"); }
 	public String url() { return getString("cjc.URL"); }
