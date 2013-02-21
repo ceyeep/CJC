@@ -9,11 +9,16 @@
  * Contributors:
  *     Cesar Yeep - initial API and implementation
  ******************************************************************************/
-
+//NOTE: this aspect is a stub. Please complete implementation.
 aspect StandardLibrary {
 	//Class declarations
-	
-	public abstract class CJCollection<E> implements Cloneable {}
+	public abstract class CJCollection<E> implements Cloneable, Iterable{
+		private ArrayList<E> elements;
+		
+		public Iterator<E> iterator() {        
+			return elements.iterator();
+		}
+    }
 
 	public class CJBag<E> extends CJCollection<E> {}
 
@@ -21,7 +26,14 @@ aspect StandardLibrary {
 
 	public class CJSequence<E> extends CJCollection<E> {}
 
-	public class CJMap<K,V> implements Cloneable {}
+	public class CJMap<K,V> implements Cloneable, Iterable {
+		private ArrayList<K> keys;
+		private ArrayList<V> values;
+		
+		public Iterator<K> iterator() {        
+			return keys.iterator();
+		}
+	}
 		
 
 }

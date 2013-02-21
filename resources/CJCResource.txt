@@ -1,7 +1,7 @@
 jastaddj.Version=@VERSION@
 jastaddj.PrettyPrinter=Java Pretty Printer
 jastaddj.DumpTree=Java AST Dumper
-cjc.Version=0.3.10 (alpha)
+cjc.Version=0.3.11 (alpha)
 cjc.Build=@CJCBUILD@
 cjc.CheckerLongName=CleanJava Checker (CJC)
 cjc.CheckerName=CleanJavaChecker
