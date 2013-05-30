@@ -5,7 +5,8 @@ CleanJava Checker (CJC) Source Distribution - Readme File
 	- Java SDK 7.x +
 	- Apache Ant 1.8.x +
 
-	- Set the environment variable to Apache and Java binary directories
+	- Set environment variables for Apache and Java binary directories 
+		(use JAVA_HOME variable for Java SDK)
 	- Create the following directory structure:
 	
 		CleanJavaChecker
